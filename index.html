@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Highway Memories — Hospitality · Heritage · Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-script"> Hotel Highway Memories</div>
+  <div class="ld-sub">Est. 2005 · NH-44</div>
+  <div class="ld-bar"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="logo">
+    Hotel Highway Memories
+    <small>Hospitality · Heritage · Home</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#rooms">Rooms</a></li>
+    <li><a href="#restaurant">Restaurant</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-book">Book Now</a></li>
+  </ul>
+  <button class="ham" id="hamBtn"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-cls" id="mobClose">✕</button>
+  <a href="#about"      class="mob-lnk">About</a>
+  <a href="#rooms"      class="mob-lnk">Rooms</a>
+  <a href="#restaurant" class="mob-lnk">Restaurant</a>
+  <a href="#amenities"  class="mob-lnk">Amenities</a>
+  <a href="#gallery"    class="mob-lnk">Gallery</a>
+  <a href="#contact"    class="mob-lnk">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Nestled on the Highway · Est. 2005</p>
+    <h1 class="hero-title">
+      Hotel <em>Highway</em><br>Memories
+    </h1>
+    <p class="hero-sub">Where every journey finds its perfect rest</p>
+    <div class="hero-btns">
+      <a href="#rooms"   class="btn-primary">View Rooms</a>
+      <a href="#contact" class="btn-ghost">Book via WhatsApp</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span></span>
+    <small>Scroll</small>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="si">
+    <div class="about-grid">
+      <div class="reveal">
+        <span class="eyebrow">Our Story</span>
+        <h2 class="section-title">A Home Away<br>From Home</h2>
+        <div class="divider"></div>
+        <p>Hotel Highway Memories has welcomed travellers with warmth and genuine care since 2005. Ideally positioned on NH-44, we offer a comfortable haven where every detail is attended to with personal attention.</p>
+        <p>Our 35 well-appointed rooms — exclusive Premium Suite and 34 Super Deluxe rooms — are designed to give you the finest rest after a long journey.</p>
+        <div class="about-stats">
+          <div class="stat"><div class="stat-num">35</div><div class="stat-lbl">Total Rooms</div></div>
+          <div class="stat"><div class="stat-num">20+</div><div class="stat-lbl">Years of Service</div></div>
+          <div class="stat"><div class="stat-num">1</div><div class="stat-lbl">Premium Suite</div></div>
+          <div class="stat"><div class="stat-num">34</div><div class="stat-lbl">Super Deluxe</div></div>
+        </div>
+        <a href="https://www.google.com/maps/search/?api=1&query=NH-44+Highway+Hotel" target="_blank" class="map-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Google Maps — NH-44
+        </a>
+      </div>
+      <div class="about-img reveal">
+        <img src="hotel-exterior.jpg" alt="Hotel Highway Memory Exterior"
+          onerror="this.style.display='none'">
+        <div class="about-img-inner">Hotel Exterior Photo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section id="rooms">
+  <div class="si">
+    <div class="cx reveal">
+      <span class="eyebrow">Accommodations</span>
+      <h2 class="section-title">Rooms &amp; Availability</h2>
+      <div class="divider"></div>
+      <p style="font-size:.82rem;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.85;font-weight:300;">
+        Click <strong style="color:var(--dark)">Check Availability</strong> to browse rooms and select multiple rooms for family or group stays.
+      </p>
+    </div>
+    <div class="rooms-grid">
+      <!-- Super Deluxe -->
+      <div class="room-card reveal">
+        <div class="slider-wrap">
+          <div class="slides" id="slidesSD"></div>
+          <span class="rbadge badge-deluxe">Super Deluxe</span>
+          <button class="sarr lft" onclick="slideCard('SD',-1)">&#8249;</button>
+          <button class="sarr rgt" onclick="slideCard('SD',1)">&#8250;</button>
+          <div class="sdots" id="dotsSD"></div>
+        </div>
+        <div class="room-body">
+          <h3 class="room-name">Super Deluxe Room</h3>
+          <p class="room-desc">King-size bed, private bath, air conditioning, flat-screen TV, and complimentary Wi-Fi. 34 rooms (101–134). Book multiple rooms at once for family or group stays.</p>
+          <div class="room-meta">
+            <div class="room-price" id="sdPrice">₹2,500 <small>/ night</small></div>
+            <button class="avail-btn" onclick="openModal('super')">Check Availability</button>
+          </div>
+        </div>
+      </div>
+      <!-- Premium Suite -->
+      <div class="room-card reveal">
+        <div class="slider-wrap">
+          <div class="slides" id="slidesPM"></div>
+          <span class="rbadge badge-premium">Premium Suite</span>
+          <button class="sarr lft" onclick="slideCard('PM',-1)">&#8249;</button>
+          <button class="sarr rgt" onclick="slideCard('PM',1)">&#8250;</button>
+          <div class="sdots" id="dotsPM"></div>
+        </div>
+        <div class="room-body">
+          <h3 class="room-name">Premium Suite</h3>
+          <p class="room-desc">Separate living area, premium furnishings, large jacuzzi bath, and panoramic views. Our exclusive one-of-a-kind suite — an unforgettable experience.</p>
+          <div class="room-meta">
+            <div class="room-price" id="pmPrice">₹5,500 <small>/ night</small></div>
+            <button class="avail-btn" onclick="openModal('premium')">Check Availability</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVAILABILITY MODAL -->
+<div class="overlay" id="availModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle">Room Availability</div>
+        <div class="modal-sub" id="modalSub">Fill your details, select rooms, then book</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-section-title">Your Details &amp; Stay Dates</div>
+        <div class="form-group"><span class="form-label">Full Name *</span><input class="form-input" type="text" id="mName" placeholder="Your full name"></div>
+        <div class="form-group"><span class="form-label">Phone / WhatsApp *</span><input class="form-input" type="tel" id="mPhone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="form-group"><span class="form-label">Check-in Date *</span><input class="form-input" type="date" id="mCheckIn"></div>
+        <div class="form-group"><span class="form-label">Check-out Date *</span><input class="form-input" type="date" id="mCheckOut"></div>
+        <div class="form-group full"><span class="form-label">Special Requests</span><input class="form-input" type="text" id="mRequests" placeholder="Extra bed, early check-in..."></div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot a"></div>Available — tap to select</div>
+        <div class="legend-item"><div class="legend-dot o"></div>Occupied</div>
+        <div class="legend-item"><div class="legend-dot s"></div>Selected</div>
+      </div>
+      <div class="pills-grid" id="pillsCont"></div>
+      <div class="avail-summary">
+        <div class="avail-row"><span>Total Rooms</span><span id="sTot">—</span></div>
+        <div class="avail-row"><span>Available</span><span class="c-avail" id="sAvail">—</span></div>
+        <div class="avail-row"><span>Occupied</span><span class="c-occup" id="sOccup">—</span></div>
+        <div class="avail-row"><span>Selected</span><span class="c-sel" id="sSel">0</span></div>
+      </div>
+      <div class="sel-bar hidden" id="selBar">
+        <div class="sb-info">
+          <span><strong id="sbType"></strong> &nbsp;·&nbsp; <strong id="sbCnt"></strong> &nbsp;·&nbsp; <strong id="sbTotal"></strong>/night</span>
+          <div class="sb-rooms" id="sbNums"></div>
+        </div>
+        <div class="sb-actions">
+          <button class="sb-clear" onclick="clearSel()">Clear</button>
+          <button class="sb-wa" onclick="bookWA()">📲 Book Now</button>
+        </div>
+      </div>
+      <div class="req-note" id="reqNote">⚠ Please fill in name, phone, and dates before booking.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="wa-confirm" onclick="bookWA()">✅ Confirm Booking via WhatsApp</button>
+      <p class="modal-note" id="mNote">Fill details · Select rooms · Confirm via WhatsApp</p>
+    </div>
+  </div>
+</div>
+
+<!-- RESTAURANT -->
+<section id="restaurant">
+  <div class="si">
+    <div class="cx reveal">
+      <span class="eyebrow">Dining Experience</span>
+      <h2 class="section-title">Our Restaurant</h2>
+      <div class="divider"></div>
+      <p class="rest-intro">Savour the finest flavours from our multi-cuisine kitchen — crafted with fresh ingredients, served with warmth. From hearty highway breakfasts to elegant evening dinners.</p>
+    </div>
+
+    <div class="timing-row reveal">
+      <div class="timing-card"><span class="timing-ico">🕖</span><div class="timing-label">Breakfast</div><div class="timing-val">7:00 – 10:30 AM</div></div>
+      <div class="timing-card"><span class="timing-ico">🍽️</span><div class="timing-label">Lunch</div><div class="timing-val">12:00 – 3:30 PM</div></div>
+      <div class="timing-card"><span class="timing-ico">🌙</span><div class="timing-label">Dinner</div><div class="timing-val">7:00 – 11:00 PM</div></div>
+    </div>
+
+    <div class="rest-photos reveal">
+      <div class="rest-photo">
+        <img src="restaurant1.jpg" alt="Restaurant Ambience" onerror="this.style.display='none'">
+        <span class="rest-ph-label">Restaurant Ambience</span>
+      </div>
+      <div class="rest-photo">
+        <img src="restaurant2.jpg" alt="Food Spread" onerror="this.style.display='none'">
+        <span class="rest-ph-label">Cuisine</span>
+      </div>
+      <div class="rest-photo">
+        <img src="restaurant3.jpg" alt="Dining Area" onerror="this.style.display='none'">
+        <span class="rest-ph-label">Dining Area</span>
+      </div>
+    </div>
+
+    <div class="menu-cta reveal">
+      <div class="menu-cta-text">
+        <span class="eyebrow">50+ Dishes</span>
+        <h3>Explore Our Full Menu</h3>
+        <p>From local favourites to continental classics — our menu is filled with over 50 carefully curated dishes across 11 categories. Tap to browse our interactive menu book.</p>
+      </div>
+      <button class="open-menu-btn" onclick="openMenuBook()">
+        <span class="menu-btn-ico">📖</span>
+        Open Menu Book
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- MENU BOOK MODAL -->
+<div class="overlay" id="menuModal">
+  <div class="book-container">
+    <button class="book-close" onclick="closeMenuBook()">✕</button>
+    <div class="book-topbar">
+      <span class="book-brand">🍽️ Hotel Highway Memories — Menu</span>
+      <span class="book-pinfo" id="bookPageInfo">Spread 1</span>
+    </div>
+    <div class="book-wrap">
+      <div class="book" id="theBook"></div>
+    </div>
+    <div class="book-controls">
+      <button class="book-nav-btn" id="bookPrev" onclick="turnPage(-1)">&#8249; Prev</button>
+      <div class="book-dots" id="bookDots"></div>
+      <button class="book-nav-btn" id="bookNext" onclick="turnPage(1)">Next &#8250;</button>
+    </div>
+  </div>
+</div>
+
+<!-- AMENITIES -->
+<section id="amenities">
+  <div class="si">
+    <div class="cx reveal">
+      <span class="eyebrow">Facilities</span>
+      <h2 class="section-title">What We Offer</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="amenities-grid">
+      <div class="amenity-item reveal"><span class="amenity-ico">🍽️</span><div class="amenity-name">Restaurant</div><p class="amenity-desc">Multi-cuisine kitchen serving breakfast, lunch, and dinner daily.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">📶</span><div class="amenity-name">Free Wi-Fi</div><p class="amenity-desc">High-speed internet throughout all rooms and common areas.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">🅿️</span><div class="amenity-name">Free Parking</div><p class="amenity-desc">Large secure parking for cars, trucks and buses — always free.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">❄️</span><div class="amenity-name">AC Rooms</div><p class="amenity-desc">Individual climate control in every room for your comfort.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">🛎️</span><div class="amenity-name">24h Reception</div><p class="amenity-desc">Round-the-clock front desk for check-in and assistance.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">☕</span><div class="amenity-name">Tea &amp; Coffee</div><p class="amenity-desc">Complimentary tea and coffee maker in every room.</p></div>
+      <div class="amenity-item reveal"><span class="amenity-ico">🔒</span><div class="amenity-name">24h Security</div><p class="amenity-desc">CCTV surveillance and in-room safe for total peace of mind.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="si">
+    <div class="cx reveal">
+      <span class="eyebrow">A Glimpse Inside</span>
+      <h2 class="section-title">Gallery</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" data-label="Exterior"><img src="gallery1.jpg" alt="Gallery 1" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Lobby"><img src="gallery2.jpg" alt="Gallery 2" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Suite"><img src="gallery3.jpg" alt="Gallery 3" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Dining"><img src="gallery4.jpg" alt="Gallery 4" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Room"><img src="gallery5.jpg" alt="Gallery 5" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Pool"><img src="gallery6.jpg" alt="Gallery 6" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Garden"><img src="gallery7.jpg" alt="Gallery 7" onerror="this.style.display='none'"></div>
+      <div class="gallery-item" data-label="Highway View"><img src="gallery8.jpg" alt="Gallery 8" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="si">
+    <div class="cx reveal">
+      <span class="eyebrow">Get In Touch</span>
+      <h2 class="section-title">Contact &amp; Reservations</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="contact-info-item">
+          <div class="cico">📍</div>
+          <div class="cinfo">
+            <h4>Address</h4>
+            <p>18, Plot no. - 17, Delhi jaipur Highway, near Hdfc bank, Kukas, Kookas, Rajasthan 302038</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=NH-44+Highway+Hotel" target="_blank" class="map-link" style="margin-top:.7rem;font-size:.58rem;padding:.6rem 1.1rem;">📍 Open in Google Maps</a>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="cico">📞</div>
+          <div class="cinfo">
+            <h4>Phone</h4>
+            <p><a href="tel:+918005712743">+918005712743</a></p>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="cico">✉️</div>
+          <div class="cinfo">
+            <h4>Email</h4>
+            <p><a href="mailto:info@hotelhighwaymemory.com">info@hotelhighwaymemory.com</a></p>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="cico">🕐</div>
+          <div class="cinfo">
+            <h4>Check-in / Check-out</h4>
+            <p>Check-in: 12:00 PM &nbsp;·&nbsp; Check-out: 11:00 AM</p>
+          </div>
+        </div>
+        <a href="https://wa.me/918005712743" target="_blank" class="wa-chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Chat with us on WhatsApp
+        </a>
+      </div>
+      <div class="reveal">
+        <p class="booking-form-title">Send a Booking Request</p>
+        <form class="booking-form" onsubmit="sendFormWA(event)">
+          <div class="form-row">
+            <div><label>Full Name</label><input type="text" id="bn" placeholder="Your name" required></div>
+            <div><label>Phone</label><input type="tel" id="bp" placeholder="+91 XXXXX XXXXX" required></div>
+          </div>
+          <div><label>Room Type</label>
+            <select id="brt">
+              <option>Super Deluxe Room (₹2,500/night)</option>
+              <option>Premium Suite (₹5,500/night)</option>
+              <option>Multiple Rooms</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div><label>Check-in</label><input type="date" id="bci" required></div>
+            <div><label>Check-out</label><input type="date" id="bco" required></div>
+          </div>
+          <div><label>No. of Rooms</label>
+            <select id="bnr"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+          </div>
+          <div><label>Special Requests</label><textarea id="bsr" placeholder="Extra bed, dietary needs..."></textarea></div>
+          <button type="submit" class="wa-submit">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Send via WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="logo">Hotel Highway Memories<small>Hospitality · Heritage · Home</small></a>
+      <p>Welcoming highway travellers with warmth and genuine hospitality since 2005. Your comfort is our calling.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#rooms">Rooms</a></li>
+        <li><a href="#restaurant">Restaurant</a></li>
+        <li><a href="#amenities">Amenities</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+918005712743">+918005712743</a></li>
+        <li><a href="mailto:info@hotelhighwaymemory.com">info@hotelhighwaymemory.com</a></li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=NH-44+Highway+Hotel" target="_blank">18, Plot no. - 17, Delhi jaipur Highway, near Hdfc bank, Kukas, Kookas, Rajasthan 302038</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Hotel Highway Memory. All rights reserved.</span>
+    <div class="footer-social">
+      <span>Follow us:</span>
+      <a href="https://www.instagram.com/hotelhighwaymemory" target="_blank" class="social-btn s-ig" title="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://wa.me/918005712743" target="_blank" class="social-btn s-wa" title="WhatsApp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<div class="floats">
+  <a href="https://www.instagram.com/hotelhighwaymemory" target="_blank" class="float-btn f-ig" title="Instagram">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+  </a>
+  <a href="https://wa.me/918005712743?text=Hi%2C%20I%20would%20like%20to%20enquire%20about%20a%20room." target="_blank" class="float-btn f-wa" title="WhatsApp">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+</div>
+
+<!-- ADMIN BUTTON -->
+<button id="adminBtn" onclick="openAdminLogin()">⚙ Admin</button>
+
+<!-- ADMIN LOGIN -->
+<div class="adm-overlay" id="adminLoginOv">
+  <div class="adm-login">
+    <h2>Admin Login</h2>
+    <p>Hotel staff access only.</p>
+    <input type="password" class="adm-input" id="adminPwd" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="adm-login-btn" onclick="doLogin()">Login</button>
+    <div class="adm-err" id="adminErr">Wrong password. Please try again.</div>
+    <button class="adm-cancel" onclick="closeAdminLogin()">Cancel</button>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="adm-overlay" id="adminDashOv">
+  <div class="adm-dash">
+    <div class="adm-dash-head">
+      <h2>🏨 Admin Dashboard</h2>
+      <div class="adm-dash-actions">
+        <button class="adm-logout" onclick="doLogout()">Logout</button>
+        <button class="adm-x" onclick="closeAdminDash()">✕</button>
+      </div>
+    </div>
+    <div class="adm-body">
+      <div class="adm-section">
+        <h3>💰 Room Prices (per night)</h3>
+        <div class="price-ctrl">
+          <div class="price-ctrl-label">Super Deluxe Room<small>Rooms 101–134 (34 rooms)</small></div>
+          <div style="display:flex;align-items:center;gap:.4rem;"><span style="color:rgba(255,255,255,.3)">₹</span><input type="number" class="price-ctrl-input" id="aSD" min="0" step="100"></div>
+        </div>
+        <div class="price-ctrl">
+          <div class="price-ctrl-label">Premium Suite<small>Room 201 (1 room)</small></div>
+          <div style="display:flex;align-items:center;gap:.4rem;"><span style="color:rgba(255,255,255,.3)">₹</span><input type="number" class="price-ctrl-input" id="aPM" min="0" step="100"></div>
+        </div>
+      </div>
+      <div class="adm-section">
+        <h3>🛏 Super Deluxe Rooms — Availability (101–134)</h3>
+        <div class="adm-legend">
+          <div class="adm-legend-item"><div class="adm-leg-dot" style="background:var(--avail)"></div> Available — click to mark occupied</div>
+          <div class="adm-legend-item"><div class="adm-leg-dot" style="background:var(--occup)"></div> Occupied — click to mark available</div>
+        </div>
+        <p class="adm-tip">Tap any room number to toggle its status.</p>
+        <div class="adm-pills-wrap" id="aSDPills"></div>
+      </div>
+      <div class="adm-section">
+        <h3>⭐ Premium Suite — Availability (Room 201)</h3>
+        <p class="adm-tip">Tap to toggle status.</p>
+        <div class="adm-pills-wrap" id="aPMPills"></div>
+      </div>
+      <button class="adm-save" onclick="saveAdmin()">💾 Save All Changes to Website</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Changes saved successfully!</div>
+
+<script src="script.js"></script>
+</body>
+</html>
