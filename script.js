@@ -18,7 +18,7 @@ const PM_SLIDES = [
   {label:'Premium Suite — Photo 1',file:'room9.jpeg'},
   {label:'Premium Suite — Photo 2',file:'room7.jpeg'},
   {label:'Premium Suite — Photo 3',file:'room5.jpeg'},
-  {label:'Premium Suite — Photo 4',file:'room1.jpeg'},
+  {label:'Premium Suite — Photo 4',file:'romm1.jpeg'},
   {label:'Premium Suite — Photo 5',file:'room3.jpeg'},
 ];
 
