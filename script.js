@@ -8,18 +8,18 @@ const MASTER_KEY= '$2a$10$VM.F.wVc8BUH2VJTnzDOyujTY3zLO5UOYQ8attzqzSdZ5ftrIINz6'
 const BIN_URL   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 const SD_SLIDES = [
-  {label:'Super Deluxe — Photo 1',file:'room-sd1.jpg'},
-  {label:'Super Deluxe — Photo 2',file:'room-sd2.jpg'},
-  {label:'Super Deluxe — Photo 3',file:'room-sd3.jpg'},
-  {label:'Super Deluxe — Photo 4',file:'room-sd4.jpg'},
-  {label:'Super Deluxe — Photo 5',file:'room-sd5.jpg'},
+  {label:'Super Deluxe — Photo 1',file:'room2.jpeg'},
+  {label:'Super Deluxe — Photo 2',file:'room4.jpeg'},
+  {label:'Super Deluxe — Photo 3',file:'room3.jpeg'},
+  {label:'Super Deluxe — Photo 4',file:'room6.jpeg'},
+  {label:'Super Deluxe — Photo 5',file:'room8.jpeg'},
 ];
 const PM_SLIDES = [
-  {label:'Premium Suite — Photo 1',file:'suite-pm1.jpg'},
-  {label:'Premium Suite — Photo 2',file:'suite-pm2.jpg'},
-  {label:'Premium Suite — Photo 3',file:'suite-pm3.jpg'},
-  {label:'Premium Suite — Photo 4',file:'suite-pm4.jpg'},
-  {label:'Premium Suite — Photo 5',file:'suite-pm5.jpg'},
+  {label:'Premium Suite — Photo 1',file:'room9.jpeg'},
+  {label:'Premium Suite — Photo 2',file:'room7.jpeg'},
+  {label:'Premium Suite — Photo 3',file:'room5.jpeg'},
+  {label:'Premium Suite — Photo 4',file:'room1.jpeg'},
+  {label:'Premium Suite — Photo 5',file:'room3.jpeg'},
 ];
 
 let D = {
