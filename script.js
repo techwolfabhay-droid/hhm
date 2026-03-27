@@ -49,9 +49,26 @@ loadData();
 /* ── NAV ── */
 const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => navEl.classList.toggle('sc', scrollY > 60));
-document.getElementById('hamBtn').onclick  = () => document.getElementById('mobMenu').classList.add('open');
-document.getElementById('mobClose').onclick= () => document.getElementById('mobMenu').classList.remove('open');
-document.querySelectorAll('.mob-lnk').forEach(a => a.onclick = () => document.getElementById('mobMenu').classList.remove('open'));
+
+const hamBtn  = document.getElementById('hamBtn');
+const mobMenu = document.getElementById('mobMenu');
+
+function openMobMenu() {
+  mobMenu.classList.add('open');
+  hamBtn.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobMenu() {
+  mobMenu.classList.remove('open');
+  hamBtn.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+hamBtn.addEventListener('click', openMobMenu);
+document.getElementById('mobClose').addEventListener('click', closeMobMenu);
+document.querySelectorAll('.mob-lnk').forEach(a => {
+  a.addEventListener('click', closeMobMenu);
+});
 
 /* ── SCROLL REVEAL ── */
 const revObs = new IntersectionObserver(entries => {
@@ -446,6 +463,7 @@ async function saveAdmin(){
 /* ── ESC ── */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape') return;
-  closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook();
+  closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook(); closeMobMenu();
   document.body.style.overflow='';
 });
+
