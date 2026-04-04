@@ -14,6 +14,13 @@ const SD_SLIDES = [
   {label:'Super Deluxe — Photo 4',file:'room6.jpeg'},
   {label:'Super Deluxe — Photo 5',file:'room8.jpeg'},
 ];
+const TR_SLIDES = [
+  {label:'Triple Room — Photo 1',file:'room4.jpeg'},
+  {label:'Triple Room — Photo 2',file:'room2.jpeg'},
+  {label:'Triple Room — Photo 3',file:'room8.jpeg'},
+  {label:'Triple Room — Photo 4',file:'room3.jpeg'},
+  {label:'Triple Room — Photo 5',file:'room6.jpeg'},
+];
 const PM_SLIDES = [
   {label:'Premium Suite — Photo 1',file:'room9.jpeg'},
   {label:'Premium Suite — Photo 2',file:'room7.jpeg'},
@@ -24,8 +31,10 @@ const PM_SLIDES = [
 
 let D = {
   sdPrice: 2500,
+  trPrice: 3500,
   pmPrice: 5500,
   sd: Object.fromEntries(Array.from({length:34},(_,i)=>[101+i,true])),
+  tr: Object.fromEntries(Array.from({length:10},(_,i)=>[135+i,true])),
   pm: {201:true}
 };
 
@@ -34,7 +43,11 @@ async function loadData() {
   try {
     const res  = await fetch(BIN_URL+'/latest', {headers:{'X-Master-Key':MASTER_KEY}});
     const json = await res.json();
-    if (json.record && json.record.sd) D = json.record;
+    if (json.record && json.record.sd) {
+      D = json.record;
+      if (!D.tr) D.tr = Object.fromEntries(Array.from({length:10},(_,i)=>[135+i,true]));
+      if (!D.trPrice) D.trPrice = 3500;
+    }
   } catch(e) { console.log('Load failed, using defaults'); }
   syncPrices(); syncSliders();
   document.getElementById('loader').classList.add('done');
@@ -46,77 +59,46 @@ async function saveData() {
 }
 loadData();
 
-/* ── PAGE TRANSITION EFFECT ── */
-(function initPageTransition() {
-  // Create transition overlay
-  const overlay = document.createElement('div');
-  overlay.id = 'page-transition';
-  overlay.innerHTML = `
-    <div class="pt-bar"></div>
-    <div class="pt-bar"></div>
-    <div class="pt-bar"></div>
-  `;
-  document.body.appendChild(overlay);
+/* ── HERO SLIDER ── */
+let heroIdx = 0;
+const heroSlides = document.querySelectorAll('.hero-slide');
+const heroDots   = document.querySelectorAll('.hero-dot');
+let heroTimer;
 
-  // Add styles
-  const style = document.createElement('style');
-  style.textContent = `
-    #page-transition {
-      position: fixed; inset: 0; z-index: 9998;
-      display: flex; pointer-events: none;
-      opacity: 0; visibility: hidden;
-    }
-    #page-transition.active {
-      pointer-events: all;
-    }
-    .pt-bar {
-      flex: 1; height: 100%;
-      background: #1E1A14;
-      transform: scaleY(0);
-      transform-origin: bottom;
-      transition: transform 0s;
-    }
-    #page-transition.entering .pt-bar {
-      transform: scaleY(1);
-    }
-    #page-transition.entering .pt-bar:nth-child(1) { transition: transform .4s cubic-bezier(.76,0,.24,1) 0s; }
-    #page-transition.entering .pt-bar:nth-child(2) { transition: transform .4s cubic-bezier(.76,0,.24,1) .06s; }
-    #page-transition.entering .pt-bar:nth-child(3) { transition: transform .4s cubic-bezier(.76,0,.24,1) .12s; }
+function heroGoTo(idx) {
+  heroSlides[heroIdx].classList.remove('active');
+  heroDots[heroIdx].classList.remove('on');
+  heroIdx = (idx + heroSlides.length) % heroSlides.length;
+  heroSlides[heroIdx].classList.add('active');
+  heroDots[heroIdx].classList.add('on');
+}
+function heroSlide(dir) {
+  clearInterval(heroTimer);
+  heroGoTo(heroIdx + dir);
+  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
+}
+heroDots.forEach((d, i) => d.addEventListener('click', () => {
+  clearInterval(heroTimer);
+  heroGoTo(i);
+  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
+}));
+heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
 
-    #page-transition.leaving .pt-bar {
-      transform-origin: top;
-      transform: scaleY(0);
-    }
-    #page-transition.leaving .pt-bar:nth-child(1) { transition: transform .4s cubic-bezier(.76,0,.24,1) .1s; }
-    #page-transition.leaving .pt-bar:nth-child(2) { transition: transform .4s cubic-bezier(.76,0,.24,1) .16s; }
-    #page-transition.leaving .pt-bar:nth-child(3) { transition: transform .4s cubic-bezier(.76,0,.24,1) .22s; }
+(function() {
+  const el = document.getElementById('hero');
+  let sx = 0;
+  el.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', e => {
+    const diff = sx - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) heroSlide(diff > 0 ? 1 : -1);
+  }, {passive:true});
+})();
 
-    /* Smooth section transitions on scroll */
-    .section-enter {
-      animation: sectionSlideUp .7s cubic-bezier(.22,1,.36,1) both;
-    }
-    @keyframes sectionSlideUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    /* Cursor glow effect on desktop */
-    @media(hover:hover) {
-      .cursor-glow {
-        position: fixed; width: 300px; height: 300px;
-        background: radial-gradient(circle, rgba(201,160,80,.04) 0%, transparent 70%);
-        border-radius: 50%; pointer-events: none; z-index: 1;
-        transform: translate(-50%,-50%);
-        transition: opacity .3s;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Cursor glow
-  if(window.matchMedia('(hover:hover)').matches) {
+/* ── CURSOR GLOW ── */
+(function() {
+  if (window.matchMedia('(hover:hover)').matches) {
     const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
+    glow.style.cssText = 'position:fixed;width:280px;height:280px;background:radial-gradient(circle,rgba(139,117,53,.04) 0%,transparent 70%);border-radius:50%;pointer-events:none;z-index:1;transform:translate(-50%,-50%);transition:opacity .3s;';
     document.body.appendChild(glow);
     document.addEventListener('mousemove', e => {
       glow.style.left = e.clientX + 'px';
@@ -132,34 +114,19 @@ window.addEventListener('scroll', () => navEl.classList.toggle('sc', scrollY > 6
 const hamBtn  = document.getElementById('hamBtn');
 const mobMenu = document.getElementById('mobMenu');
 
-function openMobMenu() {
-  mobMenu.classList.add('open');
-  hamBtn.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeMobMenu() {
-  mobMenu.classList.remove('open');
-  hamBtn.classList.remove('open');
-  document.body.style.overflow = '';
-}
+function openMobMenu() { mobMenu.classList.add('open'); hamBtn.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeMobMenu() { mobMenu.classList.remove('open'); hamBtn.classList.remove('open'); document.body.style.overflow = ''; }
 
 hamBtn.addEventListener('click', openMobMenu);
 document.getElementById('mobClose').addEventListener('click', closeMobMenu);
-document.querySelectorAll('.mob-lnk').forEach(a => {
-  a.addEventListener('click', closeMobMenu);
-});
+document.querySelectorAll('.mob-lnk').forEach(a => a.addEventListener('click', closeMobMenu));
 
-/* ── SCROLL REVEAL (enhanced with stagger) ── */
+/* ── SCROLL REVEAL ── */
 const revObs = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if(e.isIntersecting) {
-      // Stagger sibling reveals
+  entries.forEach(e => {
+    if (e.isIntersecting) {
       const siblings = e.target.parentElement.querySelectorAll('.reveal:not(.visible)');
-      siblings.forEach((sib, idx) => {
-        setTimeout(() => {
-          sib.classList.add('visible');
-        }, idx * 80);
-      });
+      siblings.forEach((sib, idx) => { setTimeout(() => sib.classList.add('visible'), idx * 80); });
       e.target.classList.add('visible');
       revObs.unobserve(e.target);
     }
@@ -167,54 +134,89 @@ const revObs = new IntersectionObserver(entries => {
 }, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-/* ── SLIDERS ── */
-const sState = {SD:0, PM:0};
+/* ── ROOM SLIDERS ── */
+const sState = {SD:0, TR:0, PM:0};
 function buildSlider(id, slides) {
   const cont  = document.getElementById('slides'+id);
   const dotsEl= document.getElementById('dots'+id);
-  if(!cont||!dotsEl) return;
+  if (!cont || !dotsEl) return;
   cont.innerHTML = ''; dotsEl.innerHTML = '';
   slides.forEach((s,i) => {
     const sl = document.createElement('div'); sl.className = 'slide';
-    const img= document.createElement('img'); img.src=s.file; img.alt=s.label;
-    img.onerror = function(){ this.style.display='none'; const ph=document.createElement('div'); ph.className='slide-ph'; ph.textContent=s.label; sl.appendChild(ph); };
+    const img= document.createElement('img'); img.src = s.file; img.alt = s.label;
+    img.onerror = function() {
+      this.style.display = 'none';
+      const ph = document.createElement('div'); ph.className = 'slide-ph';
+      ph.textContent = s.label; sl.appendChild(ph);
+    };
     sl.appendChild(img); cont.appendChild(sl);
-    const d = document.createElement('div'); d.className='sdot'+(i===0?' on':'');
-    d.onclick=()=>goSlide(id,i); dotsEl.appendChild(d);
+    const d = document.createElement('div'); d.className = 'sdot'+(i===0?' on':'');
+    d.onclick = () => goSlide(id, i); dotsEl.appendChild(d);
   });
-  sState[id]=0; cont.style.transform='translateX(0)';
+  sState[id] = 0; cont.style.transform = 'translateX(0)';
 }
 function goSlide(id, idx) {
-  const cont=document.getElementById('slides'+id); if(!cont) return;
-  const n=cont.children.length; if(!n) return;
-  sState[id]=(idx+n)%n;
-  cont.style.transform='translateX(-'+(sState[id]*100)+'%)';
-  document.querySelectorAll('#dots'+id+' .sdot').forEach((d,i)=>d.classList.toggle('on',i===sState[id]));
+  const cont = document.getElementById('slides'+id); if (!cont) return;
+  const n = cont.children.length; if (!n) return;
+  sState[id] = (idx+n)%n;
+  cont.style.transform = 'translateX(-'+(sState[id]*100)+'%)';
+  document.querySelectorAll('#dots'+id+' .sdot').forEach((d,i) => d.classList.toggle('on', i===sState[id]));
 }
-function slideCard(id,dir){goSlide(id,sState[id]+dir);}
-function syncSliders(){buildSlider('SD',SD_SLIDES);buildSlider('PM',PM_SLIDES);}
-setInterval(()=>{goSlide('SD',sState.SD+1);goSlide('PM',sState.PM+1);},4500);
+function slideCard(id,dir){ goSlide(id, sState[id]+dir); }
+function syncSliders() { buildSlider('SD', SD_SLIDES); buildSlider('TR', TR_SLIDES); buildSlider('PM', PM_SLIDES); }
+setInterval(() => { goSlide('SD', sState.SD+1); goSlide('TR', sState.TR+1); goSlide('PM', sState.PM+1); }, 4500);
 
-/* Touch/swipe support for sliders */
 (function addSwipe() {
-  ['SD','PM'].forEach(id => {
+  ['SD','TR','PM'].forEach(id => {
     let startX = 0;
     const el = document.getElementById('slides'+id);
-    if(!el) return;
+    if (!el) return;
     el.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
     el.addEventListener('touchend', e => {
       const diff = startX - e.changedTouches[0].clientX;
-      if(Math.abs(diff) > 40) slideCard(id, diff > 0 ? 1 : -1);
+      if (Math.abs(diff) > 40) slideCard(id, diff > 0 ? 1 : -1);
     }, {passive:true});
   });
 })();
 
 /* ── PRICES ── */
 function syncPrices(){
-  const sd=document.getElementById('sdPrice'), pm=document.getElementById('pmPrice');
-  if(sd) sd.innerHTML='₹'+D.sdPrice.toLocaleString('en-IN')+' <small>/ night</small>';
-  if(pm) pm.innerHTML='₹'+D.pmPrice.toLocaleString('en-IN')+' <small>/ night</small>';
+  const sd = document.getElementById('sdPrice');
+  const tr = document.getElementById('trPrice');
+  const pm = document.getElementById('pmPrice');
+  if (sd) sd.innerHTML = '₹'+D.sdPrice.toLocaleString('en-IN')+' <small>/ night</small>';
+  if (tr) tr.innerHTML = '₹'+D.trPrice.toLocaleString('en-IN')+' <small>/ night</small>';
+  if (pm) pm.innerHTML = '₹'+D.pmPrice.toLocaleString('en-IN')+' <small>/ night</small>';
 }
+
+/* ── GALLERY SLIDER ── */
+let galIdx = 0;
+const galSlides = document.querySelectorAll('.gal-slide');
+const galThumbsEl = document.querySelectorAll('.gal-thumb');
+const galTotEl = galSlides.length;
+document.getElementById('galTot').textContent = galTotEl;
+
+function galGoTo(idx) {
+  galSlides[galIdx].classList.remove('active');
+  galThumbsEl[galIdx].classList.remove('active');
+  galIdx = (idx + galTotEl) % galTotEl;
+  galSlides[galIdx].classList.add('active');
+  galThumbsEl[galIdx].classList.add('active');
+  document.getElementById('galCur').textContent = galIdx + 1;
+}
+function galSlide(dir) { galGoTo(galIdx + dir); }
+
+(function() {
+  const el = document.querySelector('.gallery-main');
+  if (!el) return;
+  let sx = 0;
+  el.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', e => {
+    const diff = sx - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) galSlide(diff > 0 ? 1 : -1);
+  }, {passive:true});
+})();
+setInterval(() => galSlide(1), 5000);
 
 /* ── AVAILABILITY MODAL ── */
 let mType=null, sel=[];
@@ -232,9 +234,13 @@ function openModal(type){
 }
 function closeModal(){document.getElementById('availModal').classList.remove('open');document.body.style.overflow='';}
 document.getElementById('availModal').onclick=function(e){if(e.target===this)closeModal();};
+
 function renderModal(){
-  const isSD=mType==='super', rooms=isSD?D.sd:D.pm;
-  const price=isSD?D.sdPrice:D.pmPrice, label=isSD?'Super Deluxe':'Premium Suite';
+  const isSD = mType==='super', isTR = mType==='triple';
+  let rooms, price, label;
+  if (isSD)      { rooms=D.sd; price=D.sdPrice; label='Super Deluxe'; }
+  else if (isTR) { rooms=D.tr; price=D.trPrice; label='Triple Occupancy'; }
+  else           { rooms=D.pm; price=D.pmPrice; label='Premium Suite'; }
   const nums=Object.keys(rooms).map(Number).sort((a,b)=>a-b);
   document.getElementById('modalTitle').textContent=label+' — Room Availability';
   const cont=document.getElementById('pillsCont'); cont.innerHTML='';
@@ -245,7 +251,7 @@ function renderModal(){
     if(av) p.onclick=()=>togglePill(n,p,price,label);
     cont.appendChild(p);
   });
-  const tot=nums.length,av=nums.filter(n=>rooms[n]).length;
+  const tot=nums.length, av=nums.filter(n=>rooms[n]).length;
   document.getElementById('sTot').textContent=tot;
   document.getElementById('sAvail').textContent=av;
   document.getElementById('sOccup').textContent=tot-av;
@@ -271,9 +277,9 @@ function refreshBar(price,label){
   document.getElementById('mNote').textContent=sel.length+' room'+(sel.length>1?'s':'')+' · ₹'+(sel.length*price).toLocaleString('en-IN')+'/night';
 }
 function clearSel(){
-  const rooms=mType==='super'?D.sd:D.pm;
-  const price=mType==='super'?D.sdPrice:D.pmPrice;
-  const label=mType==='super'?'Super Deluxe':'Premium Suite';
+  const rooms = mType==='super'?D.sd:(mType==='triple'?D.tr:D.pm);
+  const price  = mType==='super'?D.sdPrice:(mType==='triple'?D.trPrice:D.pmPrice);
+  const label  = mType==='super'?'Super Deluxe':(mType==='triple'?'Triple Occupancy':'Premium Suite');
   sel=[];
   document.querySelectorAll('#pillsCont .pill').forEach(p=>{
     const n=parseInt(p.dataset.room),av=rooms[n];
@@ -284,36 +290,25 @@ function clearSel(){
   refreshBar(price,label);
 }
 
-/* ── BOOK VIA WHATSAPP — with full amount breakdown ── */
+/* ── BOOK VIA WHATSAPP ── */
 function bookWA(){
   const name  = document.getElementById('mName').value.trim();
   const phone = document.getElementById('mPhone').value.trim();
   const ci    = document.getElementById('mCheckIn').value;
   const co    = document.getElementById('mCheckOut').value;
   const req   = document.getElementById('mRequests').value.trim();
-
-  if(!name||!phone||!ci||!co){
-    document.getElementById('reqNote').style.display='block';
-    return;
-  }
+  if(!name||!phone||!ci||!co){document.getElementById('reqNote').style.display='block';return;}
   document.getElementById('reqNote').style.display='none';
-
-  const isSD    = mType==='super';
-  const price   = isSD ? D.sdPrice : D.pmPrice;
-  const label   = isSD ? 'Super Deluxe Room' : 'Premium Suite';
+  const isSD    = mType==='super', isTR = mType==='triple';
+  const price   = isSD ? D.sdPrice : (isTR ? D.trPrice : D.pmPrice);
+  const label   = isSD ? 'Super Deluxe Room' : (isTR ? 'Triple Occupancy Room' : 'Premium Suite');
   const sorted  = [...sel].sort((a,b)=>a-b);
   const nights  = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
   const cnt     = sorted.length || 1;
   const perNight= cnt * price;
   const total   = perNight * nights;
-
-  // Format dates nicely
   const fmt = d => new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-
-  const roomLine = sorted.length
-    ? '🔢 Selected Rooms: *' + sorted.join(', ') + '* (' + cnt + ' room' + (cnt>1?'s':'') + ')\n'
-    : '🔢 No. of Rooms: *1*\n';
-
+  const roomLine = sorted.length ? '🔢 Selected Rooms: *' + sorted.join(', ') + '* (' + cnt + ' room' + (cnt>1?'s':'') + ')\n' : '🔢 No. of Rooms: *1*\n';
   const msg =
     '🏨 *Hotel Highway Memories — Booking Request*\n' +
     '━━━━━━━━━━━━━━━━━━━━\n\n' +
@@ -332,11 +327,10 @@ function bookWA(){
     '━━━━━━━━━━━━━━━━━━━━\n' +
     (req ? '\n✨ *Special Requests:* ' + req + '\n' : '') +
     '\nKindly confirm my booking. Thank you! 🙏';
-
   window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
-/* ── CONTACT FORM — with full amount breakdown ── */
+/* ── CONTACT FORM ── */
 const td=new Date().toISOString().split('T')[0];
 document.getElementById('bci').min=td; document.getElementById('bco').min=td;
 document.getElementById('bci').onchange=function(){document.getElementById('bco').min=this.value;};
@@ -350,20 +344,15 @@ function sendFormWA(e){
   const co = document.getElementById('bco').value;
   const nr = document.getElementById('bnr').value;
   const sr = document.getElementById('bsr').value;
-
   const nights = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
-
-  // Detect price from room type
   let pricePerRoom = 0;
-  if(rt.includes('2,500')) pricePerRoom = D.sdPrice || 2500;
-  else if(rt.includes('5,500')) pricePerRoom = D.pmPrice || 5500;
-
+  if (rt.includes('2,500'))      pricePerRoom = D.sdPrice || 2500;
+  else if (rt.includes('3,500')) pricePerRoom = D.trPrice || 3500;
+  else if (rt.includes('5,500')) pricePerRoom = D.pmPrice || 5500;
   const numRooms = isNaN(parseInt(nr)) ? 1 : parseInt(nr);
   const perNight = pricePerRoom * numRooms;
   const total    = perNight * nights;
-
   const fmt = d => new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-
   const amountLine = pricePerRoom > 0
     ? '💰 *Rate:*     ₹' + pricePerRoom.toLocaleString('en-IN') + ' / room / night\n' +
       (numRooms > 1 ? '🏷 *Rooms × Rate:* ' + numRooms + ' × ₹' + pricePerRoom.toLocaleString('en-IN') + ' = ₹' + perNight.toLocaleString('en-IN') + '/night\n' : '') +
@@ -372,7 +361,6 @@ function sendFormWA(e){
       '💳 *TOTAL AMOUNT: ₹' + total.toLocaleString('en-IN') + '*\n' +
       '━━━━━━━━━━━━━━━━━━━━\n'
     : '📆 *Nights:* ' + nights + '\n';
-
   const msg =
     '🏨 *Hotel Highway Memories — Booking Request*\n' +
     '━━━━━━━━━━━━━━━━━━━━\n\n' +
@@ -385,7 +373,6 @@ function sendFormWA(e){
     amountLine +
     (sr ? '\n✨ *Special Requests:* ' + sr + '\n' : '') +
     '\nKindly confirm my booking. Thank you! 🙏';
-
   window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
@@ -486,7 +473,6 @@ let bookSpreads=[], currentSpread=0;
 function buildMenuBook(){
   const book=document.getElementById('theBook'); if(!book) return;
   book.innerHTML=''; bookSpreads=[]; currentSpread=0;
-
   const cs=mkSpread();
   cs.innerHTML=`
     <div class="bpage cover">
@@ -537,7 +523,6 @@ function buildMenuBook(){
 
   buildBookDots(); updateBookInfo();
 
-  // Add touch swipe for menu book on mobile
   const bookEl = document.getElementById('theBook');
   let bStartX = 0;
   bookEl.addEventListener('touchstart', e => { bStartX = e.touches[0].clientX; }, {passive:true});
@@ -618,11 +603,17 @@ function doLogout(){closeAdminDash();}
 function openAdminDash(){
   adminW=JSON.parse(JSON.stringify(D));
   document.getElementById('aSD').value=adminW.sdPrice;
+  document.getElementById('aTR').value=adminW.trPrice;
   document.getElementById('aPM').value=adminW.pmPrice;
   const sdc=document.getElementById('aSDPills'); sdc.innerHTML='';
   Object.keys(adminW.sd).map(Number).sort((a,b)=>a-b).forEach(n=>{
     const p=mkAdmPill(n,adminW.sd[n],()=>{adminW.sd[n]=!adminW.sd[n];p.className='adm-pill '+(adminW.sd[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.sd[n]);});
     sdc.appendChild(p);
+  });
+  const trc=document.getElementById('aTRPills'); trc.innerHTML='';
+  Object.keys(adminW.tr).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    const p=mkAdmPill(n,adminW.tr[n],()=>{adminW.tr[n]=!adminW.tr[n];p.className='adm-pill '+(adminW.tr[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.tr[n]);});
+    trc.appendChild(p);
   });
   const pmc=document.getElementById('aPMPills'); pmc.innerHTML='';
   Object.keys(adminW.pm).map(Number).sort((a,b)=>a-b).forEach(n=>{
@@ -637,8 +628,10 @@ function mkAdmPill(n,av,cb){const p=document.createElement('div');p.className='a
 function admPillHTML(n,av){return '<span style="font-size:.64rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.68rem;line-height:1">'+(av?'✓':'✕')+'</span>';}
 async function saveAdmin(){
   const sdP=parseInt(document.getElementById('aSD').value);
+  const trP=parseInt(document.getElementById('aTR').value);
   const pmP=parseInt(document.getElementById('aPM').value);
   if(sdP>0) adminW.sdPrice=sdP;
+  if(trP>0) adminW.trPrice=trP;
   if(pmP>0) adminW.pmPrice=pmP;
   D=JSON.parse(JSON.stringify(adminW));
   const t=document.getElementById('toast'); t.textContent='⏳ Saving...'; t.style.display='block';
@@ -654,5 +647,6 @@ document.addEventListener('keydown',e=>{
   closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook(); closeMobMenu();
   document.body.style.overflow='';
 });
+
 
 
