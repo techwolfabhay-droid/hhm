@@ -46,6 +46,85 @@ async function saveData() {
 }
 loadData();
 
+/* ── PAGE TRANSITION EFFECT ── */
+(function initPageTransition() {
+  // Create transition overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'page-transition';
+  overlay.innerHTML = `
+    <div class="pt-bar"></div>
+    <div class="pt-bar"></div>
+    <div class="pt-bar"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Add styles
+  const style = document.createElement('style');
+  style.textContent = `
+    #page-transition {
+      position: fixed; inset: 0; z-index: 9998;
+      display: flex; pointer-events: none;
+      opacity: 0; visibility: hidden;
+    }
+    #page-transition.active {
+      pointer-events: all;
+    }
+    .pt-bar {
+      flex: 1; height: 100%;
+      background: #1E1A14;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0s;
+    }
+    #page-transition.entering .pt-bar {
+      transform: scaleY(1);
+    }
+    #page-transition.entering .pt-bar:nth-child(1) { transition: transform .4s cubic-bezier(.76,0,.24,1) 0s; }
+    #page-transition.entering .pt-bar:nth-child(2) { transition: transform .4s cubic-bezier(.76,0,.24,1) .06s; }
+    #page-transition.entering .pt-bar:nth-child(3) { transition: transform .4s cubic-bezier(.76,0,.24,1) .12s; }
+
+    #page-transition.leaving .pt-bar {
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+    #page-transition.leaving .pt-bar:nth-child(1) { transition: transform .4s cubic-bezier(.76,0,.24,1) .1s; }
+    #page-transition.leaving .pt-bar:nth-child(2) { transition: transform .4s cubic-bezier(.76,0,.24,1) .16s; }
+    #page-transition.leaving .pt-bar:nth-child(3) { transition: transform .4s cubic-bezier(.76,0,.24,1) .22s; }
+
+    /* Smooth section transitions on scroll */
+    .section-enter {
+      animation: sectionSlideUp .7s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes sectionSlideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Cursor glow effect on desktop */
+    @media(hover:hover) {
+      .cursor-glow {
+        position: fixed; width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(201,160,80,.04) 0%, transparent 70%);
+        border-radius: 50%; pointer-events: none; z-index: 1;
+        transform: translate(-50%,-50%);
+        transition: opacity .3s;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Cursor glow
+  if(window.matchMedia('(hover:hover)').matches) {
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    document.body.appendChild(glow);
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+  }
+})();
+
 /* ── NAV ── */
 const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => navEl.classList.toggle('sc', scrollY > 60));
@@ -70,10 +149,22 @@ document.querySelectorAll('.mob-lnk').forEach(a => {
   a.addEventListener('click', closeMobMenu);
 });
 
-/* ── SCROLL REVEAL ── */
+/* ── SCROLL REVEAL (enhanced with stagger) ── */
 const revObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);} });
-},{threshold:.1});
+  entries.forEach((e, i) => {
+    if(e.isIntersecting) {
+      // Stagger sibling reveals
+      const siblings = e.target.parentElement.querySelectorAll('.reveal:not(.visible)');
+      siblings.forEach((sib, idx) => {
+        setTimeout(() => {
+          sib.classList.add('visible');
+        }, idx * 80);
+      });
+      e.target.classList.add('visible');
+      revObs.unobserve(e.target);
+    }
+  });
+}, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
 /* ── SLIDERS ── */
@@ -103,6 +194,20 @@ function goSlide(id, idx) {
 function slideCard(id,dir){goSlide(id,sState[id]+dir);}
 function syncSliders(){buildSlider('SD',SD_SLIDES);buildSlider('PM',PM_SLIDES);}
 setInterval(()=>{goSlide('SD',sState.SD+1);goSlide('PM',sState.PM+1);},4500);
+
+/* Touch/swipe support for sliders */
+(function addSwipe() {
+  ['SD','PM'].forEach(id => {
+    let startX = 0;
+    const el = document.getElementById('slides'+id);
+    if(!el) return;
+    el.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+    el.addEventListener('touchend', e => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if(Math.abs(diff) > 40) slideCard(id, diff > 0 ? 1 : -1);
+    }, {passive:true});
+  });
+})();
 
 /* ── PRICES ── */
 function syncPrices(){
@@ -178,36 +283,110 @@ function clearSel(){
   document.getElementById('sSel').textContent=0;
   refreshBar(price,label);
 }
+
+/* ── BOOK VIA WHATSAPP — with full amount breakdown ── */
 function bookWA(){
-  const name=document.getElementById('mName').value.trim();
-  const phone=document.getElementById('mPhone').value.trim();
-  const ci=document.getElementById('mCheckIn').value;
-  const co=document.getElementById('mCheckOut').value;
-  const req=document.getElementById('mRequests').value.trim();
-  if(!name||!phone||!ci||!co){document.getElementById('reqNote').style.display='block';return;}
+  const name  = document.getElementById('mName').value.trim();
+  const phone = document.getElementById('mPhone').value.trim();
+  const ci    = document.getElementById('mCheckIn').value;
+  const co    = document.getElementById('mCheckOut').value;
+  const req   = document.getElementById('mRequests').value.trim();
+
+  if(!name||!phone||!ci||!co){
+    document.getElementById('reqNote').style.display='block';
+    return;
+  }
   document.getElementById('reqNote').style.display='none';
-  const isSD=mType==='super', price=isSD?D.sdPrice:D.pmPrice, label=isSD?'Super Deluxe Room':'Premium Suite';
-  const sorted=[...sel].sort((a,b)=>a-b);
-  const nights=Math.max(1,Math.round((new Date(co)-new Date(ci))/(86400000)));
-  const cnt=sorted.length||1, total=cnt*price*nights;
-  const roomLine=sorted.length?'🔢 Selected Rooms: *'+sorted.join(', ')+'* ('+cnt+' room'+(cnt>1?'s':'')+')\n':'🔢 Rooms: 1\n';
-  const msg='🏨 *Hotel Highway Memories — Booking Request*\n\n'+'👤 Name: *'+name+'*\n'+'📞 Phone: *'+phone+'*\n'+'🛏 Room Type: *'+label+'*\n'+roomLine+'📅 Check-in: *'+ci+'*\n'+'📅 Check-out: *'+co+'*\n'+'🌙 Nights: *'+nights+'*\n'+'💰 Rate: ₹'+price.toLocaleString('en-IN')+'/room/night\n'+'💳 Total: *₹'+total.toLocaleString('en-IN')+'*\n'+(req?'✨ Requests: '+req+'\n':'')+'\nPlease confirm my booking. Thank you!';
-  window.open('https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(msg),'_blank');
+
+  const isSD    = mType==='super';
+  const price   = isSD ? D.sdPrice : D.pmPrice;
+  const label   = isSD ? 'Super Deluxe Room' : 'Premium Suite';
+  const sorted  = [...sel].sort((a,b)=>a-b);
+  const nights  = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
+  const cnt     = sorted.length || 1;
+  const perNight= cnt * price;
+  const total   = perNight * nights;
+
+  // Format dates nicely
+  const fmt = d => new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+  const roomLine = sorted.length
+    ? '🔢 Selected Rooms: *' + sorted.join(', ') + '* (' + cnt + ' room' + (cnt>1?'s':'') + ')\n'
+    : '🔢 No. of Rooms: *1*\n';
+
+  const msg =
+    '🏨 *Hotel Highway Memories — Booking Request*\n' +
+    '━━━━━━━━━━━━━━━━━━━━\n\n' +
+    '👤 *Name:* ' + name + '\n' +
+    '📞 *Phone:* ' + phone + '\n\n' +
+    '🛏 *Room Type:* ' + label + '\n' +
+    roomLine +
+    '\n📅 *Check-in:*  ' + fmt(ci) + '\n' +
+    '📅 *Check-out:* ' + fmt(co) + '\n' +
+    '🌙 *Duration:*  ' + nights + ' night' + (nights>1?'s':'') + '\n\n' +
+    '💰 *Rate:*      ₹' + price.toLocaleString('en-IN') + ' / room / night\n' +
+    (cnt>1 ? '🏷 *Rooms × Rate:* ' + cnt + ' × ₹' + price.toLocaleString('en-IN') + ' = ₹' + perNight.toLocaleString('en-IN') + '/night\n' : '') +
+    '📆 *Nights:*    ' + nights + '\n' +
+    '━━━━━━━━━━━━━━━━━━━━\n' +
+    '💳 *TOTAL AMOUNT: ₹' + total.toLocaleString('en-IN') + '*\n' +
+    '━━━━━━━━━━━━━━━━━━━━\n' +
+    (req ? '\n✨ *Special Requests:* ' + req + '\n' : '') +
+    '\nKindly confirm my booking. Thank you! 🙏';
+
+  window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
-/* ── CONTACT FORM ── */
+/* ── CONTACT FORM — with full amount breakdown ── */
 const td=new Date().toISOString().split('T')[0];
 document.getElementById('bci').min=td; document.getElementById('bco').min=td;
 document.getElementById('bci').onchange=function(){document.getElementById('bco').min=this.value;};
+
 function sendFormWA(e){
   e.preventDefault();
-  const n=document.getElementById('bn').value,ph=document.getElementById('bp').value;
-  const rt=document.getElementById('brt').value,ci=document.getElementById('bci').value;
-  const co=document.getElementById('bco').value,nr=document.getElementById('bnr').value;
-  const sr=document.getElementById('bsr').value;
-  const nights=Math.max(1,Math.round((new Date(co)-new Date(ci))/(86400000)));
-  const msg='🏨 *Hotel Highway Memory — Booking Request*\n\n'+'👤 Name: *'+n+'*\n📞 Phone: *'+ph+'*\n🛏 Room: *'+rt+'*\n'+'🔢 Rooms: '+nr+'\n📅 Check-in: *'+ci+'*\n📅 Check-out: *'+co+'*\n'+'🌙 Nights: *'+nights+'*'+(sr?'\n✨ Requests: '+sr:'')+'\n\nPlease confirm. Thank you!';
-  window.open('https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(msg),'_blank');
+  const n  = document.getElementById('bn').value;
+  const ph = document.getElementById('bp').value;
+  const rt = document.getElementById('brt').value;
+  const ci = document.getElementById('bci').value;
+  const co = document.getElementById('bco').value;
+  const nr = document.getElementById('bnr').value;
+  const sr = document.getElementById('bsr').value;
+
+  const nights = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
+
+  // Detect price from room type
+  let pricePerRoom = 0;
+  if(rt.includes('2,500')) pricePerRoom = D.sdPrice || 2500;
+  else if(rt.includes('5,500')) pricePerRoom = D.pmPrice || 5500;
+
+  const numRooms = isNaN(parseInt(nr)) ? 1 : parseInt(nr);
+  const perNight = pricePerRoom * numRooms;
+  const total    = perNight * nights;
+
+  const fmt = d => new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+  const amountLine = pricePerRoom > 0
+    ? '💰 *Rate:*     ₹' + pricePerRoom.toLocaleString('en-IN') + ' / room / night\n' +
+      (numRooms > 1 ? '🏷 *Rooms × Rate:* ' + numRooms + ' × ₹' + pricePerRoom.toLocaleString('en-IN') + ' = ₹' + perNight.toLocaleString('en-IN') + '/night\n' : '') +
+      '📆 *Nights:*   ' + nights + '\n' +
+      '━━━━━━━━━━━━━━━━━━━━\n' +
+      '💳 *TOTAL AMOUNT: ₹' + total.toLocaleString('en-IN') + '*\n' +
+      '━━━━━━━━━━━━━━━━━━━━\n'
+    : '📆 *Nights:* ' + nights + '\n';
+
+  const msg =
+    '🏨 *Hotel Highway Memories — Booking Request*\n' +
+    '━━━━━━━━━━━━━━━━━━━━\n\n' +
+    '👤 *Name:* ' + n + '\n' +
+    '📞 *Phone:* ' + ph + '\n\n' +
+    '🛏 *Room Type:* ' + rt + '\n' +
+    '🔢 *No. of Rooms:* ' + nr + '\n\n' +
+    '📅 *Check-in:*  ' + fmt(ci) + '\n' +
+    '📅 *Check-out:* ' + fmt(co) + '\n\n' +
+    amountLine +
+    (sr ? '\n✨ *Special Requests:* ' + sr + '\n' : '') +
+    '\nKindly confirm my booking. Thank you! 🙏';
+
+  window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
 /* ================================================================
@@ -312,7 +491,7 @@ function buildMenuBook(){
   cs.innerHTML=`
     <div class="bpage cover">
       <div class="cover-orn">🍽️</div>
-      <div class="cover-hotel">Hotel Highway Memory</div>
+      <div class="cover-hotel">Hotel Highway Memories</div>
       <div class="cover-rule"></div>
       <div class="cover-menu-word">Menu</div>
       <div class="cover-est">Est. 2005 · NH-44</div>
@@ -346,17 +525,26 @@ function buildMenuBook(){
     <div class="bpage left" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#5C3A1E;margin-bottom:.6rem;font-weight:600;">Thank You</p>
       <p style="font-size:.7rem;color:rgba(139,94,60,.45);line-height:1.8;">We hope you enjoyed your meal.<br>Come back soon!</p>
-      <div style="margin-top:1.5rem;font-size:.65rem;color:rgba(139,94,60,.35);">📞 +91 98765 43210</div>
+      <div style="margin-top:1.5rem;font-size:.65rem;color:rgba(139,94,60,.35);">📞 +91 80057 12743</div>
     </div>
     <div class="bpage cover" style="background:linear-gradient(145deg,#2d1e0a 0%,#1a1005 100%) !important;">
       <div class="cover-orn">🏨</div>
-      <div class="cover-hotel">Hotel Highway Memory</div>
+      <div class="cover-hotel">Hotel Highway Memories</div>
       <div class="cover-rule"></div>
-      <div class="cover-est">NH-44, Highway Road</div>
+      <div class="cover-est">NH-44, Kukas, Rajasthan</div>
     </div>`;
   book.appendChild(bc); bookSpreads.push(bc);
 
   buildBookDots(); updateBookInfo();
+
+  // Add touch swipe for menu book on mobile
+  const bookEl = document.getElementById('theBook');
+  let bStartX = 0;
+  bookEl.addEventListener('touchstart', e => { bStartX = e.touches[0].clientX; }, {passive:true});
+  bookEl.addEventListener('touchend', e => {
+    const diff = bStartX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 50) turnPage(diff > 0 ? 1 : -1);
+  }, {passive:true});
 }
 function mkSpread(){const s=document.createElement('div');s.className='book-spread';return s;}
 function buildPageHTML(pg,side,num){
@@ -466,4 +654,5 @@ document.addEventListener('keydown',e=>{
   closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook(); closeMobMenu();
   document.body.style.overflow='';
 });
+
 
