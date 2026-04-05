@@ -6,7 +6,7 @@ const WA_NUM    = '918005712743';
 const BIN_ID    = '69bd80a3aa77b81da9026353';
 const MASTER_KEY= '$2a$10$VM.F.wVc8BUH2VJTnzDOyujTY3zLO5UOYQ8attzqzSdZ5ftrIINz6';
 const BIN_URL   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
- 
+
 const SD_SLIDES = [
   {label:'Super Deluxe — Photo 1',file:'room2.jpeg'},
   {label:'Super Deluxe — Photo 2',file:'room4.jpeg'},
@@ -28,14 +28,17 @@ const PM_SLIDES = [
   {label:'Family Suite — Photo 4',file:'romm1.jpeg'},
   {label:'Family Suite — Photo 5',file:'room3.jpeg'},
 ];
- 
+
+// Family Suite rooms: 101A,101B ... 106A,106B, 201A,201B ... 206A,206B
 const PM_ROOM_KEYS = [
   '101A','101B','102A','102B','103A','103B','104A','104B','105A','105B','106A','106B',
   '201A','201B','202A','202B','203A','203B','204A','204B','205A','205B','206A','206B'
 ];
+// Super Deluxe rooms: 301,302,303,305,306,308,309,401,403
 const SD_ROOM_KEYS = [301,302,303,305,306,308,309,401,403];
+// Triple rooms: 304,307
 const TR_ROOM_KEYS = [304,307];
- 
+
 let D = {
   sdPrice: 2500,
   trPrice: 3500,
@@ -44,7 +47,7 @@ let D = {
   tr: Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true])),
   pm: Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]))
 };
- 
+
 /* ── LOAD / SAVE (JSONBin) ── */
 async function loadData() {
   try {
@@ -52,14 +55,22 @@ async function loadData() {
     const json = await res.json();
     if (json.record && json.record.sd) {
       D = json.record;
+      // Ensure new keys exist if old data loaded
       if (!D.trPrice) D.trPrice = 3500;
       if (!D.pmPrice) D.pmPrice = 4500;
+      // Re-init rooms if keys don't match new structure
       const sdKeys = Object.keys(D.sd||{});
-      if (!sdKeys.includes('301')) D.sd = Object.fromEntries(SD_ROOM_KEYS.map(k=>[k,true]));
+      if (!sdKeys.includes('301')) {
+        D.sd = Object.fromEntries(SD_ROOM_KEYS.map(k=>[k,true]));
+      }
       const trKeys = Object.keys(D.tr||{});
-      if (!trKeys.includes('304')) D.tr = Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true]));
+      if (!trKeys.includes('304')) {
+        D.tr = Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true]));
+      }
       const pmKeys = Object.keys(D.pm||{});
-      if (!pmKeys.includes('101A')) D.pm = Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]));
+      if (!pmKeys.includes('101A')) {
+        D.pm = Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]));
+      }
     }
   } catch(e) { console.log('Load failed, using defaults'); }
   syncPrices(); syncSliders();
@@ -71,13 +82,13 @@ async function saveData() {
   } catch(e) { alert('Save failed! Check connection.'); }
 }
 loadData();
- 
+
 /* ── HERO SLIDER ── */
 let heroIdx = 0;
 const heroSlides = document.querySelectorAll('.hero-slide');
 const heroDots   = document.querySelectorAll('.hero-dot');
 let heroTimer;
- 
+
 function heroGoTo(idx) {
   heroSlides[heroIdx].classList.remove('active');
   heroDots[heroIdx].classList.remove('on');
@@ -96,7 +107,7 @@ heroDots.forEach((d, i) => d.addEventListener('click', () => {
   heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
 }));
 heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
- 
+
 (function() {
   const el = document.getElementById('hero');
   let sx = 0;
@@ -106,7 +117,7 @@ heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
     if (Math.abs(diff) > 50) heroSlide(diff > 0 ? 1 : -1);
   }, {passive:true});
 })();
- 
+
 /* ── CURSOR GLOW ── */
 (function() {
   if (window.matchMedia('(hover:hover)').matches) {
@@ -119,21 +130,21 @@ heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
     });
   }
 })();
- 
+
 /* ── NAV ── */
 const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => navEl.classList.toggle('sc', scrollY > 60));
- 
+
 const hamBtn  = document.getElementById('hamBtn');
 const mobMenu = document.getElementById('mobMenu');
- 
+
 function openMobMenu() { mobMenu.classList.add('open'); hamBtn.classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeMobMenu() { mobMenu.classList.remove('open'); hamBtn.classList.remove('open'); document.body.style.overflow = ''; }
- 
+
 hamBtn.addEventListener('click', openMobMenu);
 document.getElementById('mobClose').addEventListener('click', closeMobMenu);
 document.querySelectorAll('.mob-lnk').forEach(a => a.addEventListener('click', closeMobMenu));
- 
+
 /* ── SCROLL REVEAL ── */
 const revObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -146,7 +157,7 @@ const revObs = new IntersectionObserver(entries => {
   });
 }, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
- 
+
 /* ── ROOM SLIDERS ── */
 const sState = {SD:0, TR:0, PM:0};
 function buildSlider(id, slides) {
@@ -178,7 +189,7 @@ function goSlide(id, idx) {
 function slideCard(id,dir){ goSlide(id, sState[id]+dir); }
 function syncSliders() { buildSlider('SD', SD_SLIDES); buildSlider('TR', TR_SLIDES); buildSlider('PM', PM_SLIDES); }
 setInterval(() => { goSlide('SD', sState.SD+1); goSlide('TR', sState.TR+1); goSlide('PM', sState.PM+1); }, 4500);
- 
+
 (function addSwipe() {
   ['SD','TR','PM'].forEach(id => {
     let startX = 0;
@@ -191,7 +202,7 @@ setInterval(() => { goSlide('SD', sState.SD+1); goSlide('TR', sState.TR+1); goSl
     }, {passive:true});
   });
 })();
- 
+
 /* ── PRICES ── */
 function syncPrices(){
   const sd = document.getElementById('sdPrice');
@@ -201,14 +212,14 @@ function syncPrices(){
   if (tr) tr.innerHTML = '₹'+D.trPrice.toLocaleString('en-IN')+' <small>/ night</small>';
   if (pm) pm.innerHTML = '₹'+D.pmPrice.toLocaleString('en-IN')+' <small>/ night</small>';
 }
- 
+
 /* ── GALLERY SLIDER ── */
 let galIdx = 0;
 const galSlides = document.querySelectorAll('.gal-slide');
 const galThumbsEl = document.querySelectorAll('.gal-thumb');
 const galTotEl = galSlides.length;
 document.getElementById('galTot').textContent = galTotEl;
- 
+
 function galGoTo(idx) {
   galSlides[galIdx].classList.remove('active');
   galThumbsEl[galIdx].classList.remove('active');
@@ -218,7 +229,7 @@ function galGoTo(idx) {
   document.getElementById('galCur').textContent = galIdx + 1;
 }
 function galSlide(dir) { galGoTo(galIdx + dir); }
- 
+
 (function() {
   const el = document.querySelector('.gallery-main');
   if (!el) return;
@@ -230,7 +241,7 @@ function galSlide(dir) { galGoTo(galIdx + dir); }
   }, {passive:true});
 })();
 setInterval(() => galSlide(1), 5000);
- 
+
 /* ── AVAILABILITY MODAL ── */
 let mType=null, sel=[];
 function openModal(type){
@@ -247,20 +258,21 @@ function openModal(type){
 }
 function closeModal(){document.getElementById('availModal').classList.remove('open');document.body.style.overflow='';}
 document.getElementById('availModal').onclick=function(e){if(e.target===this)closeModal();};
- 
+
 function renderModal(){
   const isSD = mType==='super', isTR = mType==='triple';
   let rooms, price, label;
   if (isSD)      { rooms=D.sd; price=D.sdPrice; label='Super Deluxe'; }
   else if (isTR) { rooms=D.tr; price=D.trPrice; label='Triple Occupancy'; }
   else           { rooms=D.pm; price=D.pmPrice; label='Family Suite'; }
- 
+
+  // Sort keys: numeric first, then alphanumeric (101A, 101B style)
   const nums = Object.keys(rooms).sort((a,b)=>{
     const na = parseInt(a), nb = parseInt(b);
     if (na !== nb) return na - nb;
     return String(a).localeCompare(String(b));
   });
- 
+
   document.getElementById('modalTitle').textContent=label+' — Room Availability';
   const cont=document.getElementById('pillsCont'); cont.innerHTML='';
   nums.forEach(n=>{
@@ -312,7 +324,7 @@ function clearSel(){
   document.getElementById('sSel').textContent=0;
   refreshBar(price,label);
 }
- 
+
 /* ── BOOK VIA WHATSAPP ── */
 function bookWA(){
   const name  = document.getElementById('mName').value.trim();
@@ -356,12 +368,12 @@ function bookWA(){
     '\nKindly confirm my booking. Thank you! 🙏';
   window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
- 
+
 /* ── CONTACT FORM ── */
 const td=new Date().toISOString().split('T')[0];
 document.getElementById('bci').min=td; document.getElementById('bco').min=td;
 document.getElementById('bci').onchange=function(){document.getElementById('bco').min=this.value;};
- 
+
 function sendFormWA(e){
   e.preventDefault();
   const n  = document.getElementById('bn').value;
@@ -402,234 +414,99 @@ function sendFormWA(e){
     '\nKindly confirm my booking. Thank you! 🙏';
   window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
 }
- 
+
 /* ================================================================
-   MENU BOOK DATA — Updated from actual menu photos
+   MENU BOOK DATA
 ================================================================ */
-const MENU_DATA = [
-  {category:'☀️ Mini Meals / Breakfast',items:[
-    {name:'Bread Butter / Jam (4 Slices)',desc:'Toasted bread with butter or jam',price:'₹110',type:'veg'},
-    {name:'Poha',desc:'Flattened rice with mustard, curry leaves, peanuts',price:'₹120',type:'veg'},
-    {name:'Masala Maggie',desc:'Classic Maggie noodles with spices',price:'₹120',type:'veg'},
-    {name:'Aloo Parantha',desc:'Stuffed whole-wheat flatbread with spiced potato',price:'₹120',type:'veg'},
-    {name:'Aloo Pyaz Parantha',desc:'Potato & onion stuffed flatbread',price:'₹130',type:'veg'},
-    {name:'Aloo Gobhi Parantha',desc:'Potato & cauliflower stuffed flatbread',price:'₹150',type:'veg'},
-    {name:'Mix Parantha',desc:'Mixed vegetable stuffed flatbread',price:'₹150',type:'veg'},
-    {name:'Paneer Parantha',desc:'Cottage cheese stuffed flatbread',price:'₹160',type:'veg'},
-    {name:'Poori Bhaji',desc:'Puffed bread served with spiced potato curry',price:'₹180',type:'veg'},
-    {name:'Pav Bhaji',desc:'Buttered pav with spiced mixed vegetable bhaji',price:'₹195',type:'veg'},
-    {name:'Chole Bhature',desc:'Spiced chickpeas with fried bread',price:'₹230',type:'veg'},
-    {name:'Amritsari Chole Kulche',desc:'Amritsari style chole with kulcha',price:'₹250',type:'veg'},
-    {name:'Extra Bhature (1 Pc)',desc:'Additional bhatura',price:'₹80',type:'veg'},
-    {name:'Extra Poori (2 Pcs)',desc:'Additional pooris',price:'₹70',type:'veg'},
-    {name:'Extra Pav',desc:'Additional pav bread',price:'₹80',type:'veg'},
+const MENU_DATA=[
+  {category:'🥣 Breakfast',items:[
+    {name:'Aloo Paratha',desc:'Stuffed whole-wheat flatbread with spiced potato',price:'₹80',type:'veg'},
+    {name:'Paneer Paratha',desc:'Cottage cheese stuffed flatbread with butter',price:'₹90',type:'veg'},
+    {name:'Masala Omelette',desc:'3 eggs with onion, tomato, green chilli',price:'₹70',type:'egg'},
+    {name:'Bread Butter Toast',desc:'Toasted white or brown bread with butter & jam',price:'₹40',type:'veg'},
+    {name:'Poha',desc:'Flattened rice with mustard, curry leaves, peanuts',price:'₹60',type:'veg'},
+    {name:'Upma',desc:'Semolina with vegetables and tempering',price:'₹60',type:'veg'},
+    {name:'Idli Sambar',desc:'3 steamed rice cakes with sambar and chutney',price:'₹70',type:'veg'},
+    {name:'Egg Bhurji with Bread',desc:'Scrambled spiced eggs with toasted bread',price:'₹80',type:'egg'},
   ]},
   {category:'🍲 Soups',items:[
-    {name:'Tomato Soup',desc:'Creamy fresh tomato soup',price:'₹150',type:'veg'},
-    {name:'Sweet Corn Soup',desc:'Creamy sweet corn soup',price:'₹160',type:'veg'},
-    {name:'Hot & Sour Soup',desc:'Tangy Indo-Chinese style hot & sour',price:'₹170',type:'veg'},
-    {name:'Veg. Soup',desc:'Mixed vegetable clear soup',price:'₹170',type:'veg'},
-    {name:'Manchao Soup',desc:'Hot tangy Indo-Chinese with crispy noodles',price:'₹180',type:'veg'},
+    {name:'Tomato Soup',desc:'Creamy tomato with fresh cream and croutons',price:'₹80',type:'veg'},
+    {name:'Manchow Soup',desc:'Hot & tangy Indo-Chinese with crispy noodles',price:'₹90',type:'veg'},
+    {name:'Chicken Clear Soup',desc:'Light broth with shredded chicken and vegetables',price:'₹110',type:'nonveg'},
+    {name:'Sweet Corn Soup',desc:'Creamy corn with vegetable option',price:'₹90',type:'veg'},
   ]},
-  {category:'🔥 Tandoor Se (Veg Starters)',items:[
-    {name:'Paneer Tikka',desc:'Marinated cottage cheese grilled in tandoor',price:'₹320',type:'veg'},
-    {name:'Malai Paneer Tikka',desc:'Creamy marinated paneer tikka',price:'₹340',type:'veg'},
-    {name:'Mushroom Tikka',desc:'Spiced mushrooms grilled in tandoor',price:'₹330',type:'veg'},
-    {name:'Afghani Paneer Tikka',desc:'Afghani style creamy paneer tikka',price:'₹330',type:'veg'},
-    {name:'Nazakat Aloo',desc:'Spiced potato preparation from tandoor',price:'₹270',type:'veg'},
-    {name:'Peshawari Aloo',desc:'Peshawari style potato tikka',price:'₹250',type:'veg'},
-    {name:'Soya Chaap Tikka',desc:'Tandoor grilled soya chaap with spices',price:'₹340',type:'veg'},
-    {name:'Malai Soya Chaap Tikka',desc:'Creamy marinated soya chaap tikka',price:'₹360',type:'veg'},
-    {name:'Paneer Tikka Roll',desc:'Paneer tikka wrapped in flatbread',price:'₹350',type:'veg'},
-    {name:'Veg. Roll',desc:'Mixed vegetable roll',price:'₹280',type:'veg'},
+  {category:'🥗 Starters — Veg',items:[
+    {name:'Veg Spring Rolls',desc:'Crispy rolls stuffed with seasoned vegetables',price:'₹120',type:'veg'},
+    {name:'Paneer Tikka',desc:'Marinated cottage cheese grilled in tandoor',price:'₹180',type:'veg'},
+    {name:'Aloo Tikki',desc:'Spiced potato patties with mint & tamarind chutney',price:'₹100',type:'veg'},
+    {name:'Hara Bhara Kabab',desc:'Spinach and pea cakes, mildly spiced',price:'₹130',type:'veg'},
+    {name:'Gobi Manchurian',desc:'Crispy cauliflower in spicy Indo-Chinese sauce',price:'₹140',type:'veg'},
   ]},
-  {category:'🥗 Salad & Papad',items:[
-    {name:'Green Salad',desc:'Fresh seasonal green salad',price:'₹90',type:'veg'},
-    {name:'Onion Salad',desc:'Sliced onion with lime and spices',price:'₹80',type:'veg'},
-    {name:'Masala Pyaz',desc:'Spiced onion mix',price:'₹110',type:'veg'},
-    {name:'Garlic Chutney',desc:'Fresh garlic chutney',price:'₹90',type:'veg'},
-    {name:'Fry Mirchi',desc:'Fried green chillies',price:'₹70',type:'veg'},
-    {name:'Masala Papad',desc:'Crispy papad with masala topping',price:'₹70',type:'veg'},
-    {name:'Fry Papad',desc:'Deep fried crispy papad',price:'₹40',type:'veg'},
-    {name:'Roasted Papad',desc:'Roasted papad',price:'₹30',type:'veg'},
-    {name:'Sabut Dana Papad',desc:'Whole grain papad',price:'₹60',type:'veg'},
+  {category:'🍗 Starters — Non Veg',items:[
+    {name:'Chicken Tikka',desc:'Boneless chicken marinated in spices, tandoor-grilled',price:'₹200',type:'nonveg'},
+    {name:'Chicken 65',desc:'Deep fried spicy chicken — classic South Indian style',price:'₹190',type:'nonveg'},
+    {name:'Chicken Lollipop',desc:'6 pcs marinated and fried chicken wings',price:'₹220',type:'nonveg'},
+    {name:'Mutton Seekh Kabab',desc:'Minced lamb with herbs on skewers',price:'₹260',type:'nonveg'},
+    {name:'Fish Fry',desc:'Spiced crispy fried fish with lime and onion',price:'₹230',type:'nonveg'},
   ]},
-  {category:'🍟 Starters (Veg)',items:[
-    {name:'Bhelpuri',desc:'Puffed rice with chutneys and vegetables',price:'₹170',type:'veg'},
-    {name:'Kurkure Bhel',desc:'Crispy kurkure bhel mix',price:'₹180',type:'veg'},
-    {name:'Namkeen Shots (6 Pcs)',desc:'Bite-sized namkeen shots',price:'₹180',type:'veg'},
-    {name:'Bingo Bhel',desc:'Bingo style bhel mix',price:'₹180',type:'veg'},
-    {name:'Nachos Bhel',desc:'Nachos with bhel toppings',price:'₹220',type:'veg'},
-    {name:'French Fries',desc:'Crispy golden french fries',price:'₹190',type:'veg'},
-    {name:'Peri Peri French Fries',desc:'Spicy peri peri seasoned fries',price:'₹210',type:'veg'},
-    {name:'Spring Rolls',desc:'Crispy vegetable stuffed spring rolls',price:'₹230',type:'veg'},
-    {name:'Peanut Masala',desc:'Spiced masala peanuts',price:'₹210',type:'veg'},
-    {name:'Bhujiya Chaat',desc:'Crispy bhujiya chaat',price:'₹190',type:'veg'},
-    {name:'Hara Bhara Kabab',desc:'Spinach and pea cakes, mildly spiced',price:'₹230',type:'veg'},
-    {name:'Veg. Pakoda (8 Pcs)',desc:'Crispy mixed vegetable fritters',price:'₹210',type:'veg'},
-    {name:'Aloo Chaat',desc:'Spiced potato chaat with chutneys',price:'₹220',type:'veg'},
-    {name:'Cheese Balls (6 Pcs)',desc:'Crispy golden cheese balls',price:'₹250',type:'veg'},
-    {name:'Paneer Pakoda (8 Pcs)',desc:'Crispy battered paneer fritters',price:'₹250',type:'veg'},
-    {name:'Karari Roti',desc:'Crispy Karari roti starter',price:'₹280',type:'veg'},
+  {category:'🍛 Main Course — Veg',items:[
+    {name:'Dal Makhani',desc:'Slow-cooked black lentils with butter and cream',price:'₹160',type:'veg'},
+    {name:'Palak Paneer',desc:'Cottage cheese in smooth spinach gravy',price:'₹170',type:'veg'},
+    {name:'Paneer Butter Masala',desc:'Paneer in rich tomato-butter-cream sauce',price:'₹180',type:'veg'},
+    {name:'Shahi Paneer',desc:'Paneer in royal cashew-onion gravy',price:'₹190',type:'veg'},
+    {name:'Matar Mushroom',desc:'Peas and mushroom in spiced onion-tomato gravy',price:'₹150',type:'veg'},
+    {name:'Mixed Veg Curry',desc:'Seasonal vegetables in homestyle masala',price:'₹140',type:'veg'},
   ]},
-  {category:'🍛 Delicious Veg (Main Course)',items:[
-    {name:'Kaju Curry',desc:'Cashew nut in rich creamy gravy',price:'₹370',type:'veg'},
-    {name:'Paneer Cheese Rolls',desc:'Paneer cheese rolls in masala',price:'₹320',type:'veg'},
-    {name:'Navratan Korma',desc:'Nine-vegetable korma in mild creamy sauce',price:'₹320',type:'veg'},
-    {name:'Paneer Tikka Masala',desc:'Grilled paneer in spiced masala gravy',price:'₹320',type:'veg'},
-    {name:'Soya Chaap Masala',desc:'Soya chaap in rich masala gravy',price:'₹350',type:'veg'},
-    {name:'Paneer Bhurji',desc:'Scrambled spiced cottage cheese',price:'₹310',type:'veg'},
-    {name:'Veg. Kolhapuri',desc:'Spicy Kolhapuri style mixed vegetables',price:'₹290',type:'veg'},
-    {name:'Dhaba Paneer',desc:'Rustic dhaba style paneer',price:'₹290',type:'veg'},
-    {name:'Matar Mushroom',desc:'Peas and mushroom in spiced gravy',price:'₹310',type:'veg'},
-    {name:'Kadhai Paneer',desc:'Paneer cooked in kadhai with bell peppers',price:'₹290',type:'veg'},
-    {name:'Handi Paneer',desc:'Paneer slow cooked in handi',price:'₹290',type:'veg'},
-    {name:'Malai Kofta',desc:'Fried paneer balls in rich cream gravy',price:'₹290',type:'veg'},
-    {name:'Paneer Butter Masala',desc:'Paneer in rich tomato-butter-cream sauce',price:'₹280',type:'veg'},
-    {name:'Paneer Lababdar',desc:'Paneer in onion-tomato lababdar gravy',price:'₹280',type:'veg'},
-    {name:'Shahi Paneer',desc:'Paneer in royal cashew-onion gravy',price:'₹280',type:'veg'},
-    {name:'Khoya Paneer',desc:'Paneer with khoya in rich gravy',price:'₹280',type:'veg'},
-    {name:'Mushroom Masala',desc:'Button mushrooms in spiced masala',price:'₹285',type:'veg'},
-    {name:'Matar Paneer',desc:'Peas and cottage cheese in tomato gravy',price:'₹270',type:'veg'},
-    {name:'Palak Paneer',desc:'Cottage cheese in smooth spinach gravy',price:'₹260',type:'veg'},
-    {name:'Mix Veg.',desc:'Seasonal vegetables in homestyle masala',price:'₹260',type:'veg'},
-    {name:'Veg. Jalfreji',desc:'Stir-fried mixed vegetables Jalfrezi style',price:'₹260',type:'veg'},
-    {name:'Chana Masala',desc:'Spiced chickpeas in tangy gravy',price:'₹260',type:'veg'},
-    {name:'Sev Tamatar',desc:'Crispy sev with tomato gravy',price:'₹250',type:'veg'},
-    {name:'Bhindi Masala',desc:'Spiced okra dry masala',price:'₹250',type:'veg'},
-    {name:'Gatta Masala',desc:'Rajasthani gatta in spiced gravy',price:'₹240',type:'veg'},
-    {name:'Dum Aloo',desc:'Baby potatoes in rich dum masala',price:'₹240',type:'veg'},
-    {name:'Kashmiri Dum Aloo',desc:'Kashmiri style dum aloo in yogurt gravy',price:'₹240',type:'veg'},
-    {name:'Haryali Kofta',desc:'Green herb kofta in spinach gravy',price:'₹240',type:'veg'},
-    {name:'Dal Palak',desc:'Lentils cooked with spinach',price:'₹240',type:'veg'},
-    {name:'Kadhi Pakoda',desc:'Yogurt gravy with fried pakodas',price:'₹230',type:'veg'},
-    {name:'Jeera Aloo',desc:'Cumin tempered potatoes',price:'₹220',type:'veg'},
-    {name:'Aloo Gobhi',desc:'Potato and cauliflower dry masala',price:'₹220',type:'veg'},
-    {name:'Gobhi Masala',desc:'Cauliflower in spiced masala gravy',price:'₹220',type:'veg'},
+  {category:'🍖 Main Course — Non Veg',items:[
+    {name:'Butter Chicken',desc:'Tandoori chicken in velvety tomato-butter gravy',price:'₹240',type:'nonveg'},
+    {name:'Chicken Rara',desc:'Minced and whole chicken in bold spicy masala',price:'₹250',type:'nonveg'},
+    {name:'Mutton Rogan Josh',desc:'Kashmiri-style slow-cooked lamb',price:'₹300',type:'nonveg'},
+    {name:'Chicken Kadai',desc:'Stir-fried chicken with bell peppers',price:'₹240',type:'nonveg'},
+    {name:'Keema Matar',desc:'Minced lamb with green peas and spices',price:'₹260',type:'nonveg'},
+    {name:'Fish Curry',desc:'Fresh fish in tangy masala gravy',price:'₹270',type:'nonveg'},
+    {name:'Prawn Masala',desc:'Juicy prawns in spiced onion-tomato base',price:'₹290',type:'nonveg'},
   ]},
-  {category:'🫘 Dal',items:[
-    {name:'Dal Fry',desc:'Yellow lentils tempered with spices',price:'₹230',type:'veg'},
-    {name:'Dal Tadka',desc:'Dal with classic tadka tempering',price:'₹230',type:'veg'},
-    {name:'Dal Dhaba',desc:'Rustic dhaba style mixed dal',price:'₹230',type:'veg'},
-    {name:'Dal Makhani',desc:'Slow-cooked black lentils with butter and cream',price:'₹250',type:'veg'},
-    {name:'Rajma',desc:'Red kidney beans in spiced gravy',price:'₹250',type:'veg'},
+  {category:'🍚 Rice & Biryani',items:[
+    {name:'Veg Biryani',desc:'Fragrant basmati with seasonal vegetables and saffron',price:'₹160',type:'veg'},
+    {name:'Chicken Biryani',desc:'Dum-cooked basmati with tender chicken',price:'₹220',type:'nonveg'},
+    {name:'Mutton Biryani',desc:'Slow-cooked aromatic lamb biryani — house special',price:'₹280',type:'nonveg'},
+    {name:'Egg Biryani',desc:'Spiced basmati with boiled eggs and masala',price:'₹180',type:'egg'},
+    {name:'Plain Steamed Rice',desc:'Long-grain basmati',price:'₹80',type:'veg'},
+    {name:'Jeera Rice',desc:'Cumin-tempered basmati',price:'₹100',type:'veg'},
   ]},
-  {category:'🍚 Rice',items:[
-    {name:'Veg. Biryani',desc:'Fragrant basmati with seasonal vegetables and saffron',price:'₹275',type:'veg'},
-    {name:'Veg. Pulaao',desc:'Vegetable pulao with aromatic spices',price:'₹250',type:'veg'},
-    {name:'Jeera Rice',desc:'Cumin-tempered long-grain basmati',price:'₹210',type:'veg'},
-    {name:'Plain Rice',desc:'Steamed long-grain basmati rice',price:'₹180',type:'veg'},
-    {name:'Veg. Biryani With Raita',desc:'Veg biryani served with raita',price:'₹310',type:'veg'},
+  {category:'🫓 Breads',items:[
+    {name:'Tandoori Roti',desc:'Whole-wheat flatbread from clay oven',price:'₹25',type:'veg'},
+    {name:'Butter Naan',desc:'Soft leavened bread with butter, baked in tandoor',price:'₹35',type:'veg'},
+    {name:'Garlic Naan',desc:'Naan brushed with garlic butter and coriander',price:'₹45',type:'veg'},
+    {name:'Lachha Paratha',desc:'Layered flaky whole-wheat bread',price:'₹40',type:'veg'},
+    {name:'Puri (2 pcs)',desc:'Puffed deep-fried wheat bread',price:'₹30',type:'veg'},
   ]},
-  {category:'🫓 Assorted Breads',items:[
-    {name:'Tawa / Tandoori Roti',desc:'Whole-wheat flatbread from tawa or clay oven',price:'₹30',type:'veg'},
-    {name:'Butter Tawa / Tandoori Roti',desc:'Buttered whole-wheat flatbread',price:'₹35',type:'veg'},
-    {name:'Plain Naan',desc:'Soft leavened bread baked in tandoor',price:'₹90',type:'veg'},
-    {name:'Missi Roti',desc:'Spiced gram flour flatbread',price:'₹90',type:'veg'},
-    {name:'Lacha Parantha',desc:'Layered flaky whole-wheat bread',price:'₹80',type:'veg'},
-    {name:'Missi Onion Roti',desc:'Missi roti with onion',price:'₹110',type:'veg'},
-    {name:'Butter Naan',desc:'Soft naan with butter glaze',price:'₹100',type:'veg'},
-    {name:'Cheese Naan',desc:'Naan stuffed with melted cheese',price:'₹120',type:'veg'},
-    {name:'Stuffed Naan',desc:'Naan stuffed with spiced filling',price:'₹130',type:'veg'},
-    {name:'Garlic Naan',desc:'Naan brushed with garlic butter and coriander',price:'₹130',type:'veg'},
-    {name:'Ajwain Parantha',desc:'Carom-seed flaky parantha',price:'₹130',type:'veg'},
-    {name:'Chur Chur Naan',desc:'Crispy layered chur chur naan',price:'₹150',type:'veg'},
-    {name:'Kashmiri Naan',desc:'Sweet naan with dry fruits and coconut',price:'₹170',type:'veg'},
+  {category:'🍝 Chinese & Continental',items:[
+    {name:'Veg Hakka Noodles',desc:'Stir-fried noodles with vegetables and sauces',price:'₹130',type:'veg'},
+    {name:'Chicken Fried Rice',desc:'Wok-tossed rice with egg and chicken',price:'₹170',type:'nonveg'},
+    {name:'Veg Fried Rice',desc:'Classic Indo-Chinese style with mixed vegetables',price:'₹130',type:'veg'},
+    {name:'Grilled Sandwich',desc:'Multi-grain with cheese, veggies, and mustard',price:'₹90',type:'veg'},
+    {name:'Club Sandwich',desc:'Triple-decker with chicken, egg, lettuce, tomato',price:'₹140',type:'nonveg'},
   ]},
-  {category:'🥣 Raita',items:[
-    {name:'Fruit Raita',desc:'Chilled yogurt with seasonal fruits',price:'₹220',type:'veg'},
-    {name:'Veg. Raita',desc:'Yogurt with mixed vegetables',price:'₹180',type:'veg'},
-    {name:'Boondi Raita',desc:'Yogurt with fried boondi drops',price:'₹160',type:'veg'},
-    {name:'Cucumber Raita',desc:'Chilled yogurt with cucumber',price:'₹140',type:'veg'},
-    {name:'Onion Raita',desc:'Yogurt with onion and green chilli',price:'₹140',type:'veg'},
-    {name:'Plain Raita',desc:'Simple chilled yogurt',price:'₹130',type:'veg'},
-    {name:'Curd',desc:'Fresh set curd',price:'₹90',type:'veg'},
-  ]},
-  {category:'🍝 Chinese Starter',items:[
-    {name:'Honey Chilli Potato',desc:'Crispy potato tossed in honey chilli sauce',price:'₹230',type:'veg'},
-    {name:'Veg. Chowmein',desc:'Stir-fried noodles with vegetables',price:'₹210',type:'veg'},
-    {name:'Hakka Noodles',desc:'Indo-Chinese style hakka noodles',price:'₹250',type:'veg'},
-    {name:'Veg. Fried Rice',desc:'Wok-tossed rice with mixed vegetables',price:'₹250',type:'veg'},
-    {name:'Veg. Manchurian (6 Pcs)',desc:'Vegetable balls in tangy Manchurian sauce',price:'₹280',type:'veg'},
-    {name:'Chilly Paneer',desc:'Crispy paneer tossed in chilli sauce',price:'₹280',type:'veg'},
-    {name:'Nachos Platter',desc:'Loaded nachos platter with dips',price:'₹320',type:'veg'},
-    {name:'Chilli Garlic Noodles',desc:'Spicy garlic flavoured noodles',price:'₹250',type:'veg'},
-    {name:'Crispy Corn',desc:'Crispy fried corn with spices',price:'₹210',type:'veg'},
-  ]},
-  {category:'🍕 Italian Starter & Breads',items:[
-    {name:'Red Sauce Pasta',desc:'Penne in classic tomato red sauce',price:'₹270',type:'veg'},
-    {name:'White Sauce Pasta',desc:'Creamy béchamel white sauce pasta',price:'₹270',type:'veg'},
-    {name:'Pink Sauce Pasta',desc:'Pasta in blended pink sauce',price:'₹270',type:'veg'},
-    {name:'Bombay Sandwich',desc:'Classic Bombay style grilled sandwich',price:'₹130',type:'veg'},
-    {name:'Veg. Sandwich',desc:'Fresh vegetable sandwich',price:'₹150',type:'veg'},
-    {name:'Veg. Cheese Grilled Sandwich',desc:'Grilled sandwich with cheese and vegetables',price:'₹170',type:'veg'},
-    {name:'Veg. Paneer Tikka Grilled Sandwich',desc:'Grilled sandwich with paneer tikka filling',price:'₹195',type:'veg'},
-    {name:'Sweet Corn Cheese Sandwich',desc:'Grilled sandwich with sweet corn and cheese',price:'₹210',type:'veg'},
-  ]},
-  {category:'🍕 Pizzas',items:[
-    {name:'Cheese Pizza',desc:'Classic loaded cheese pizza',price:'₹200',type:'veg'},
-    {name:'Magherita',desc:'Traditional tomato and mozzarella pizza',price:'₹240',type:'veg'},
-    {name:'OTC Pizza',desc:'Our special OTC pizza',price:'₹260',type:'veg'},
-    {name:'Highway Memory Special Pizza',desc:'Chef\'s signature special pizza',price:'₹325',type:'veg'},
-    {name:'Paneer Tikka Pizza',desc:'Pizza topped with paneer tikka',price:'₹310',type:'veg'},
-  ]},
-  {category:'🍽️ Sizzlers',items:[
-    {name:'Chinese Sizzler',desc:'Fried Rice, Veg Manchurian, Chilly Paneer, Honey Chilli Potato',price:'₹460',type:'veg'},
-    {name:'Italian Sizzler',desc:'Pasta, French Fries, Hakka Noodle, Cheese Balls',price:'₹460',type:'veg'},
-    {name:'Tandoori Sizzler',desc:'Paneer Tikka, Aloo Nazakat, Hara Bhara Kabab, Mushroom Tikka',price:'₹520',type:'veg'},
-    {name:'Tandoori Platter',desc:'Paneer Tikka, Malai Soya Chaap Tikka, Hara Bhara Kabab, French Fries',price:'₹520',type:'veg'},
-  ]},
-  {category:'🍱 Thali',items:[
-    {name:'Veg. Thali',desc:'Seasonal Veg, Dal, Pickle, Raita, 3 Tawa Roti / Tandoori Roti, Rice, Salad',price:'₹350',type:'veg'},
-    {name:'Special Thali',desc:'Seasonal Veg, Dal Fry, Paneer Preparation, Pickle, Raita, Salad, Rice, 2 Tandoori Roti, 1 Laccha Parantha, 1 Papad, Chutney, 1 Sweet',price:'₹400',type:'veg'},
+  {category:'🥤 Beverages',items:[
+    {name:'Masala Chai',desc:'Spiced ginger tea with milk',price:'₹30',type:'veg'},
+    {name:'Filter Coffee',desc:'South Indian drip-brewed strong coffee',price:'₹40',type:'veg'},
+    {name:'Fresh Lime Soda',desc:'Sweet, salty or masala',price:'₹50',type:'veg'},
+    {name:'Mango Lassi',desc:'Chilled yogurt drink with ripe mango',price:'₹80',type:'veg'},
+    {name:'Buttermilk (Chaas)',desc:'Chilled spiced yogurt drink',price:'₹40',type:'veg'},
+    {name:'Cold Coffee',desc:'Blended iced coffee with milk and cream',price:'₹80',type:'veg'},
+    {name:'Fresh Juice',desc:'Seasonal — Orange / Mosambi / Watermelon',price:'₹70',type:'veg'},
   ]},
   {category:'🍮 Desserts',items:[
-    {name:'Gulab Jamun (2 Pcs)',desc:'Soft milk-solid dumplings in rose sugar syrup',price:'₹120',type:'veg'},
-    {name:'Rasgulla (2 Pcs)',desc:'Light cottage cheese balls in sugar syrup',price:'₹110',type:'veg'},
-    {name:'Rasmalai (2 Pcs)',desc:'Soft paneer discs in saffron-flavoured milk',price:'₹190',type:'veg'},
-    {name:'Gulab Jamun With Ice Cream',desc:'Gulab jamun served with vanilla ice cream',price:'₹180',type:'veg'},
-  ]},
-  {category:'🍦 Frozen Dessert',items:[
-    {name:'Vanilla Ice Cream',desc:'Classic creamy vanilla ice cream',price:'₹150',type:'veg'},
-    {name:'Butter Scotch Ice Cream',desc:'Butterscotch flavoured ice cream',price:'₹150',type:'veg'},
-    {name:'Chocolate Ice Cream',desc:'Rich chocolate ice cream',price:'₹150',type:'veg'},
-    {name:'Strawberry Ice Cream',desc:'Fresh strawberry flavoured ice cream',price:'₹150',type:'veg'},
-    {name:'American Nuts',desc:'Ice cream with american nuts topping',price:'₹150',type:'veg'},
-    {name:'Chocho Chip Ice Cream',desc:'Choco chip ice cream',price:'₹150',type:'veg'},
-    {name:'Havmor Ice Cream',desc:'Havmor brand ice cream — available flavours on request',price:'Available',type:'veg'},
-  ]},
-  {category:'🥤 Beverages Cold',items:[
-    {name:'Butter Milk / Chaach',desc:'Chilled spiced yogurt drink',price:'₹80',type:'veg'},
-    {name:'Mineral Water',desc:'Packaged mineral water',price:'₹25',type:'veg'},
-    {name:'Sweet Lassi',desc:'Chilled sweet yogurt lassi',price:'₹95',type:'veg'},
-    {name:'Cold Drink (500 ML)',desc:'Assorted cold beverages',price:'₹60',type:'veg'},
-    {name:'Ice Tea',desc:'Chilled iced tea',price:'₹150',type:'veg'},
-    {name:'Cold Coffee',desc:'Blended iced coffee',price:'₹185',type:'veg'},
-    {name:'Cold Coffee With Ice Cream',desc:'Cold coffee topped with ice cream',price:'₹225',type:'veg'},
-    {name:'Lemonade',desc:'Fresh lime lemonade',price:'₹190',type:'veg'},
-  ]},
-  {category:'🥤 Shakes',items:[
-    {name:'Vanilla Shake',desc:'Classic creamy vanilla milkshake',price:'₹225',type:'veg'},
-    {name:'Pineapple Shake',desc:'Fresh pineapple milkshake',price:'₹220',type:'veg'},
-    {name:'Strawberry Shake',desc:'Fresh strawberry milkshake',price:'₹220',type:'veg'},
-    {name:'Butterscotch Shake',desc:'Butterscotch flavoured milkshake',price:'₹230',type:'veg'},
-    {name:'Virgin Mojito',desc:'Refreshing mint lime mojito',price:'₹185',type:'veg'},
-    {name:'Chocolate Shake',desc:'Rich chocolate milkshake',price:'₹230',type:'veg'},
-    {name:'Americano Shake',desc:'Coffee style americano shake',price:'₹195',type:'veg'},
-    {name:'Oreo Shake',desc:'Oreo cookie blended milkshake',price:'₹250',type:'veg'},
-    {name:'Five Star Shake',desc:'Five Star chocolate bar milkshake',price:'₹250',type:'veg'},
-    {name:'Kitkat Shake',desc:'Kitkat chocolate milkshake',price:'₹250',type:'veg'},
-  ]},
-  {category:'☕ Beverages Hot',items:[
-    {name:'Black Tea',desc:'Classic black tea',price:'₹50',type:'veg'},
-    {name:'Green Tea',desc:'Refreshing green tea',price:'₹60',type:'veg'},
-    {name:'Masala Tea',desc:'Spiced ginger masala chai',price:'₹50',type:'veg'},
-    {name:'Tulsi Tea',desc:'Tulsi (holy basil) herbal tea',price:'₹50',type:'veg'},
-    {name:'Hot Milk',desc:'Fresh hot milk',price:'₹80',type:'veg'},
-    {name:'Caffe Classic',desc:'Classic hot coffee',price:'₹80',type:'veg'},
+    {name:'Gulab Jamun (2 pcs)',desc:'Soft milk-solid dumplings in rose sugar syrup',price:'₹70',type:'veg'},
+    {name:'Rasgulla (2 pcs)',desc:'Light cottage cheese balls in sugar syrup',price:'₹70',type:'veg'},
+    {name:'Kheer',desc:'Creamy rice pudding with cardamom and dry fruits',price:'₹90',type:'veg'},
+    {name:'Gajar Halwa',desc:'Carrot pudding with ghee, milk and dry fruits',price:'₹100',type:'veg'},
+    {name:'Ice Cream (2 scoops)',desc:'Vanilla / Chocolate / Butterscotch / Strawberry',price:'₹80',type:'veg'},
+    {name:'Fruit Custard',desc:'Chilled vanilla custard with seasonal fruits',price:'₹90',type:'veg'},
   ]},
 ];
- 
+
 /* ── BUILD MENU BOOK ── */
 let bookSpreads=[], currentSpread=0;
 function buildMenuBook(){
@@ -648,16 +525,15 @@ function buildMenuBook(){
       <p style="font-size:.52rem;letter-spacing:.35em;text-transform:uppercase;color:#8B5E3C;margin-bottom:1rem;">Welcome</p>
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#5C3A1E;line-height:1.7;max-width:200px;font-style:italic;">"Good food is the foundation of genuine happiness."</p>
       <div style="width:36px;height:1px;background:#C9956A;margin:1.2rem auto;"></div>
-      <p style="font-size:.62rem;color:rgba(139,94,60,.45);line-height:1.8;">All prices exclusive of taxes.<br>Please inform us of any allergies.<br>Kitchen closed 10:30 PM – 7:00 AM.<br>Min. waiting time 20 mins.</p>
-      <div style="margin-top:1rem;display:flex;gap:1rem;justify-content:center;font-size:.58rem;color:rgba(139,94,60,.4);">
-        <span>🟢 Veg</span><span>🔴 Non-Veg</span>
+      <p style="font-size:.62rem;color:rgba(139,94,60,.45);line-height:1.8;">All prices inclusive of taxes.<br>Please inform us of any allergies.</p>
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;font-size:.58rem;color:rgba(139,94,60,.4);">
+        <span>🟢 Veg</span><span>🟡 Egg</span><span>🔴 Non-Veg</span>
       </div>
-      <p style="font-size:.52rem;color:rgba(139,94,60,.3);margin-top:.8rem;line-height:1.6;">Breakfast: 8AM–10AM · Lunch: 1PM–4PM<br>Dinner: 7PM–10:30PM</p>
       <div class="page-num" style="position:static;margin-top:auto;padding-top:2rem;">i</div>
     </div>`;
   cs.classList.add('active');
   book.appendChild(cs); bookSpreads.push(cs);
- 
+
   const allPages=[];
   MENU_DATA.forEach(cat=>{
     for(let i=0;i<cat.items.length;i+=5)
@@ -668,16 +544,12 @@ function buildMenuBook(){
     sp.innerHTML=buildPageHTML(allPages[i],'left',i+1)+(allPages[i+1]?buildPageHTML(allPages[i+1],'right',i+2):'<div class="bpage right"></div>');
     book.appendChild(sp); bookSpreads.push(sp);
   }
- 
+
   const bc=mkSpread();
   bc.innerHTML=`
     <div class="bpage left" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#5C3A1E;margin-bottom:.6rem;font-weight:600;">Thank You</p>
       <p style="font-size:.7rem;color:rgba(139,94,60,.45);line-height:1.8;">We hope you enjoyed your meal.<br>Come back soon!</p>
-      <div style="margin-top:.8rem;font-size:.6rem;color:rgba(139,94,60,.3);line-height:2;">
-        🚫 Tobacco, Alcohol & Smoking<br>strictly prohibited on property.<br><br>
-        Orders served as per availability.<br>Rights of admission reserved.
-      </div>
       <div style="margin-top:1.5rem;font-size:.65rem;color:rgba(139,94,60,.35);">📞 +91 80057 12743</div>
     </div>
     <div class="bpage cover" style="background:linear-gradient(145deg,#2d1e0a 0%,#1a1005 100%) !important;">
@@ -687,9 +559,9 @@ function buildMenuBook(){
       <div class="cover-est">NH-44, Kukas, Rajasthan</div>
     </div>`;
   book.appendChild(bc); bookSpreads.push(bc);
- 
+
   buildBookDots(); updateBookInfo();
- 
+
   const bookEl = document.getElementById('theBook');
   let bStartX = 0;
   bookEl.addEventListener('touchstart', e => { bStartX = e.touches[0].clientX; }, {passive:true});
@@ -760,7 +632,7 @@ function jumpSpread(idx){
 function openMenuBook(){buildMenuBook();document.getElementById('menuModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeMenuBook(){document.getElementById('menuModal').classList.remove('open');document.body.style.overflow='';}
 document.getElementById('menuModal').onclick=function(e){if(e.target===this)closeMenuBook();};
- 
+
 /* ── ADMIN ── */
 let adminW=null;
 function openAdminLogin(){document.getElementById('adminPwd').value='';document.getElementById('adminErr').style.display='none';document.getElementById('adminLoginOv').classList.add('open');document.body.style.overflow='hidden';}
@@ -772,13 +644,14 @@ function openAdminDash(){
   document.getElementById('aSD').value=adminW.sdPrice;
   document.getElementById('aTR').value=adminW.trPrice;
   document.getElementById('aPM').value=adminW.pmPrice;
- 
+
+  // Sort helper
   const sortKeys = keys => keys.sort((a,b)=>{
     const na=parseInt(a),nb=parseInt(b);
     if(na!==nb) return na-nb;
     return String(a).localeCompare(String(b));
   });
- 
+
   const sdc=document.getElementById('aSDPills'); sdc.innerHTML='';
   sortKeys(Object.keys(adminW.sd)).forEach(n=>{
     const p=mkAdmPill(n,adminW.sd[n],()=>{adminW.sd[n]=!adminW.sd[n];p.className='adm-pill '+(adminW.sd[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.sd[n]);});
@@ -814,14 +687,13 @@ async function saveAdmin(){
   t.textContent='✅ Saved! All devices will update.';
   clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',3500);
 }
- 
+
 /* ── ESC ── */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape') return;
   closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook(); closeMobMenu();
   document.body.style.overflow='';
 });
-
 
 
 
