@@ -22,20 +22,30 @@ const TR_SLIDES = [
   {label:'Triple Room — Photo 5',file:'room6.jpeg'},
 ];
 const PM_SLIDES = [
-  {label:'Premium Suite — Photo 1',file:'room9.jpeg'},
-  {label:'Premium Suite — Photo 2',file:'room7.jpeg'},
-  {label:'Premium Suite — Photo 3',file:'room5.jpeg'},
-  {label:'Premium Suite — Photo 4',file:'romm1.jpeg'},
-  {label:'Premium Suite — Photo 5',file:'room3.jpeg'},
+  {label:'Family Suite — Photo 1',file:'room9.jpeg'},
+  {label:'Family Suite — Photo 2',file:'room7.jpeg'},
+  {label:'Family Suite — Photo 3',file:'room5.jpeg'},
+  {label:'Family Suite — Photo 4',file:'romm1.jpeg'},
+  {label:'Family Suite — Photo 5',file:'room3.jpeg'},
 ];
+
+// Family Suite rooms: 101A,101B ... 106A,106B, 201A,201B ... 206A,206B
+const PM_ROOM_KEYS = [
+  '101A','101B','102A','102B','103A','103B','104A','104B','105A','105B','106A','106B',
+  '201A','201B','202A','202B','203A','203B','204A','204B','205A','205B','206A','206B'
+];
+// Super Deluxe rooms: 301,302,303,305,306,308,309,401,403
+const SD_ROOM_KEYS = [301,302,303,305,306,308,309,401,403];
+// Triple rooms: 304,307
+const TR_ROOM_KEYS = [304,307];
 
 let D = {
   sdPrice: 2500,
   trPrice: 3500,
-  pmPrice: 5500,
-  sd: Object.fromEntries(Array.from({length:34},(_,i)=>[101+i,true])),
-  tr: Object.fromEntries(Array.from({length:10},(_,i)=>[135+i,true])),
-  pm: {201:true}
+  pmPrice: 4500,
+  sd: Object.fromEntries(SD_ROOM_KEYS.map(k=>[k,true])),
+  tr: Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true])),
+  pm: Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]))
 };
 
 /* ── LOAD / SAVE (JSONBin) ── */
@@ -45,8 +55,22 @@ async function loadData() {
     const json = await res.json();
     if (json.record && json.record.sd) {
       D = json.record;
-      if (!D.tr) D.tr = Object.fromEntries(Array.from({length:10},(_,i)=>[135+i,true]));
+      // Ensure new keys exist if old data loaded
       if (!D.trPrice) D.trPrice = 3500;
+      if (!D.pmPrice) D.pmPrice = 4500;
+      // Re-init rooms if keys don't match new structure
+      const sdKeys = Object.keys(D.sd||{});
+      if (!sdKeys.includes('301')) {
+        D.sd = Object.fromEntries(SD_ROOM_KEYS.map(k=>[k,true]));
+      }
+      const trKeys = Object.keys(D.tr||{});
+      if (!trKeys.includes('304')) {
+        D.tr = Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true]));
+      }
+      const pmKeys = Object.keys(D.pm||{});
+      if (!pmKeys.includes('101A')) {
+        D.pm = Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]));
+      }
     }
   } catch(e) { console.log('Load failed, using defaults'); }
   syncPrices(); syncSliders();
@@ -240,14 +264,21 @@ function renderModal(){
   let rooms, price, label;
   if (isSD)      { rooms=D.sd; price=D.sdPrice; label='Super Deluxe'; }
   else if (isTR) { rooms=D.tr; price=D.trPrice; label='Triple Occupancy'; }
-  else           { rooms=D.pm; price=D.pmPrice; label='Premium Suite'; }
-  const nums=Object.keys(rooms).map(Number).sort((a,b)=>a-b);
+  else           { rooms=D.pm; price=D.pmPrice; label='Family Suite'; }
+
+  // Sort keys: numeric first, then alphanumeric (101A, 101B style)
+  const nums = Object.keys(rooms).sort((a,b)=>{
+    const na = parseInt(a), nb = parseInt(b);
+    if (na !== nb) return na - nb;
+    return String(a).localeCompare(String(b));
+  });
+
   document.getElementById('modalTitle').textContent=label+' — Room Availability';
   const cont=document.getElementById('pillsCont'); cont.innerHTML='';
   nums.forEach(n=>{
     const av=rooms[n]; const p=document.createElement('div');
     p.className='pill '+(av?'a':'o'); p.dataset.room=n;
-    p.innerHTML='<span style="font-size:.7rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">'+(av?'🛏':'🔒')+'</span>';
+    p.innerHTML='<span style="font-size:.62rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">'+(av?'🛏':'🔒')+'</span>';
     if(av) p.onclick=()=>togglePill(n,p,price,label);
     cont.appendChild(p);
   });
@@ -260,8 +291,8 @@ function renderModal(){
 }
 function togglePill(n,pill,price,label){
   const idx=sel.indexOf(n);
-  if(idx===-1){sel.push(n);pill.className='pill sel';pill.innerHTML='<span style="font-size:.7rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.75rem;line-height:1">✓</span>';}
-  else{sel.splice(idx,1);pill.className='pill a';pill.innerHTML='<span style="font-size:.7rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">🛏</span>';}
+  if(idx===-1){sel.push(n);pill.className='pill sel';pill.innerHTML='<span style="font-size:.62rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.75rem;line-height:1">✓</span>';}
+  else{sel.splice(idx,1);pill.className='pill a';pill.innerHTML='<span style="font-size:.62rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">🛏</span>';}
   document.getElementById('sSel').textContent=sel.length;
   refreshBar(price,label);
 }
@@ -269,7 +300,11 @@ function refreshBar(price,label){
   const bar=document.getElementById('selBar');
   if(!sel.length){bar.classList.add('hidden');document.getElementById('mNote').textContent='Fill details · Select rooms · Confirm via WhatsApp';return;}
   bar.classList.remove('hidden');
-  const sorted=[...sel].sort((a,b)=>a-b);
+  const sorted=[...sel].sort((a,b)=>{
+    const na=parseInt(a),nb=parseInt(b);
+    if(na!==nb) return na-nb;
+    return String(a).localeCompare(String(b));
+  });
   document.getElementById('sbType').textContent=label;
   document.getElementById('sbCnt').textContent=sel.length+' room'+(sel.length>1?'s':'');
   document.getElementById('sbTotal').textContent='₹'+(sel.length*price).toLocaleString('en-IN');
@@ -279,12 +314,12 @@ function refreshBar(price,label){
 function clearSel(){
   const rooms = mType==='super'?D.sd:(mType==='triple'?D.tr:D.pm);
   const price  = mType==='super'?D.sdPrice:(mType==='triple'?D.trPrice:D.pmPrice);
-  const label  = mType==='super'?'Super Deluxe':(mType==='triple'?'Triple Occupancy':'Premium Suite');
+  const label  = mType==='super'?'Super Deluxe':(mType==='triple'?'Triple Occupancy':'Family Suite');
   sel=[];
   document.querySelectorAll('#pillsCont .pill').forEach(p=>{
-    const n=parseInt(p.dataset.room),av=rooms[n];
+    const n=p.dataset.room, av=rooms[n];
     p.className='pill '+(av?'a':'o');
-    p.innerHTML='<span style="font-size:.7rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">'+(av?'🛏':'🔒')+'</span>';
+    p.innerHTML='<span style="font-size:.62rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.7rem;line-height:1">'+(av?'🛏':'🔒')+'</span>';
   });
   document.getElementById('sSel').textContent=0;
   refreshBar(price,label);
@@ -301,8 +336,12 @@ function bookWA(){
   document.getElementById('reqNote').style.display='none';
   const isSD    = mType==='super', isTR = mType==='triple';
   const price   = isSD ? D.sdPrice : (isTR ? D.trPrice : D.pmPrice);
-  const label   = isSD ? 'Super Deluxe Room' : (isTR ? 'Triple Occupancy Room' : 'Premium Suite');
-  const sorted  = [...sel].sort((a,b)=>a-b);
+  const label   = isSD ? 'Super Deluxe Room' : (isTR ? 'Triple Occupancy Room' : 'Family Suite');
+  const sorted  = [...sel].sort((a,b)=>{
+    const na=parseInt(a),nb=parseInt(b);
+    if(na!==nb) return na-nb;
+    return String(a).localeCompare(String(b));
+  });
   const nights  = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
   const cnt     = sorted.length || 1;
   const perNight= cnt * price;
@@ -348,7 +387,7 @@ function sendFormWA(e){
   let pricePerRoom = 0;
   if (rt.includes('2,500'))      pricePerRoom = D.sdPrice || 2500;
   else if (rt.includes('3,500')) pricePerRoom = D.trPrice || 3500;
-  else if (rt.includes('5,500')) pricePerRoom = D.pmPrice || 5500;
+  else if (rt.includes('4,500')) pricePerRoom = D.pmPrice || 4500;
   const numRooms = isNaN(parseInt(nr)) ? 1 : parseInt(nr);
   const perNight = pricePerRoom * numRooms;
   const total    = perNight * nights;
@@ -605,18 +644,26 @@ function openAdminDash(){
   document.getElementById('aSD').value=adminW.sdPrice;
   document.getElementById('aTR').value=adminW.trPrice;
   document.getElementById('aPM').value=adminW.pmPrice;
+
+  // Sort helper
+  const sortKeys = keys => keys.sort((a,b)=>{
+    const na=parseInt(a),nb=parseInt(b);
+    if(na!==nb) return na-nb;
+    return String(a).localeCompare(String(b));
+  });
+
   const sdc=document.getElementById('aSDPills'); sdc.innerHTML='';
-  Object.keys(adminW.sd).map(Number).sort((a,b)=>a-b).forEach(n=>{
+  sortKeys(Object.keys(adminW.sd)).forEach(n=>{
     const p=mkAdmPill(n,adminW.sd[n],()=>{adminW.sd[n]=!adminW.sd[n];p.className='adm-pill '+(adminW.sd[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.sd[n]);});
     sdc.appendChild(p);
   });
   const trc=document.getElementById('aTRPills'); trc.innerHTML='';
-  Object.keys(adminW.tr).map(Number).sort((a,b)=>a-b).forEach(n=>{
+  sortKeys(Object.keys(adminW.tr)).forEach(n=>{
     const p=mkAdmPill(n,adminW.tr[n],()=>{adminW.tr[n]=!adminW.tr[n];p.className='adm-pill '+(adminW.tr[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.tr[n]);});
     trc.appendChild(p);
   });
   const pmc=document.getElementById('aPMPills'); pmc.innerHTML='';
-  Object.keys(adminW.pm).map(Number).sort((a,b)=>a-b).forEach(n=>{
+  sortKeys(Object.keys(adminW.pm)).forEach(n=>{
     const p=mkAdmPill(n,adminW.pm[n],()=>{adminW.pm[n]=!adminW.pm[n];p.className='adm-pill '+(adminW.pm[n]?'a':'o');p.innerHTML=admPillHTML(n,adminW.pm[n]);});
     pmc.appendChild(p);
   });
@@ -625,7 +672,7 @@ function openAdminDash(){
 }
 function closeAdminDash(){document.getElementById('adminDashOv').classList.remove('open');document.body.style.overflow='';}
 function mkAdmPill(n,av,cb){const p=document.createElement('div');p.className='adm-pill '+(av?'a':'o');p.innerHTML=admPillHTML(n,av);p.onclick=cb;return p;}
-function admPillHTML(n,av){return '<span style="font-size:.64rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.68rem;line-height:1">'+(av?'✓':'✕')+'</span>';}
+function admPillHTML(n,av){return '<span style="font-size:.58rem;font-weight:700;line-height:1">'+n+'</span><span style="font-size:.68rem;line-height:1">'+(av?'✓':'✕')+'</span>';}
 async function saveAdmin(){
   const sdP=parseInt(document.getElementById('aSD').value);
   const trP=parseInt(document.getElementById('aTR').value);
@@ -647,6 +694,7 @@ document.addEventListener('keydown',e=>{
   closeModal(); closeAdminDash(); closeAdminLogin(); closeMenuBook(); closeMobMenu();
   document.body.style.overflow='';
 });
+
 
 
 
