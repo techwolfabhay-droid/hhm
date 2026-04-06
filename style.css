@@ -76,9 +76,12 @@ input, select, textarea { font-family: inherit; outline: none; }
 /* ================================================================
    NAV
 ================================================================ */
+/* NAYA — lagao */
 #nav {
   position: fixed; top: 0; width: 100%; z-index: 900;
-  padding: .85rem 3.5rem; display: flex; justify-content: space-between; align-items: center;
+  padding: .55rem 3.5rem; display: flex; justify-content: space-between; align-items: center;
+  background: rgba(250,248,242,.97); backdrop-filter: blur(18px);
+  box-shadow: 0 1px 0 rgba(139,117,53,.12), 0 6px 28px rgba(44,36,22,.07);
   transition: all .4s cubic-bezier(.4,0,.2,1);
 }
 #nav.sc {
@@ -102,11 +105,11 @@ input, select, textarea { font-family: inherit; outline: none; }
 .nav-logo-text { display: flex; flex-direction: column; }
 .nav-name {
   font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700;
-  color: #fff; line-height: 1.1; letter-spacing: .018em; transition: color .4s;
+  color: var(--dark-text); line-height: 1.1; letter-spacing: .018em; transition: color .4s;
 }
 .nav-sub {
   font-size: .36rem; letter-spacing: .42em; text-transform: uppercase;
-  color: rgba(255,255,255,.38); margin-top: .1rem; transition: color .4s;
+  color: var(--muted); margin-top: .1rem; transition: color .4s;
 }
 #nav.sc .nav-name { color: var(--dark-text); }
 #nav.sc .nav-sub  { color: var(--muted); }
@@ -114,7 +117,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
 .nav-links a {
   font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500;
-  color: rgba(255,255,255,.65); transition: color .3s; position: relative;
+  color: var(--muted); transition: color .3s; position: relative;
 }
 .nav-links a::after {
   content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
@@ -134,7 +137,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   padding: 8px; cursor: pointer; min-width: 44px; min-height: 44px;
   align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent;
 }
-.ham span { width: 22px; height: 1.5px; background: #fff; display: block; transition: all .3s; }
+.ham span { width: 22px; height: 1.5px; background: var(--dark-text); display: block; transition: all .3s; }
 #nav.sc .ham span { background: var(--dark-text); }
 .ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .ham.open span:nth-child(2) { opacity: 0; }
