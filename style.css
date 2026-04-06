@@ -91,8 +91,8 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .nav-logo { display: flex; align-items: center; gap: .85rem; }
 .nav-logo-img {
-  width: 48px; height: 48px; object-fit: contain;
-  border-radius: 50%;
+  width: 45px; height: 45px; object-fit: contain;
+  border-radius: 45%;
   border: 1.5px solid rgba(201,168,76,.4);
   padding: 3px;
   background: rgba(255,255,255,.08);
