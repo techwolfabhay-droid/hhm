@@ -80,9 +80,16 @@ let heroTimer;
 function heroGoTo(idx) {
   heroSlides[heroIdx].classList.remove('active');
   heroDots[heroIdx].classList.remove('on');
+  // Slide info hide
+  const oldInfo = document.getElementById('hsi' + heroIdx);
+  if (oldInfo) oldInfo.style.display = 'none';
+  
   heroIdx = (idx + heroSlides.length) % heroSlides.length;
   heroSlides[heroIdx].classList.add('active');
   heroDots[heroIdx].classList.add('on');
+  // Slide info show
+  const newInfo = document.getElementById('hsi' + heroIdx);
+  if (newInfo) newInfo.style.display = 'block';
 }
 function heroSlide(dir) {
   clearInterval(heroTimer);
