@@ -30,7 +30,7 @@ const PM_SLIDES = [
 ];
  
 const PM_ROOM_KEYS = [
-  '101','102','103','104','105','106','201','202','203','204','205','206'
+  '101','102','103','104','105','106','107','108','109','110','111','112'
 ];
 const SD_ROOM_KEYS = [301,302,303,305,306,308,309,401,403];
 const TR_ROOM_KEYS = [304,307];
@@ -58,7 +58,7 @@ async function loadData() {
       const trKeys = Object.keys(D.tr||{});
       if (!trKeys.includes('304')) D.tr = Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true]));
       const pmKeys = Object.keys(D.pm||{});
-      if (!pmKeys.includes('101A')) D.pm = Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]));
+      if (!pmKeys.includes('101')) D.pm = Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]));
     }
   } catch(e) { console.log('Load failed, using defaults'); }
   syncPrices(); syncSliders();
