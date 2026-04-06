@@ -220,10 +220,11 @@ input, select, textarea { font-family: inherit; outline: none; }
 .hero-dot.on { background: var(--gold-warm); width: 22px; border-radius: 3px; }
 
 /* Hero content — shifted slightly upward */
+/* style.css mein */
 .hero-content {
   position: relative; z-index: 3; text-align: center; color: #fff;
-  padding: 1rem 1.5rem; max-width: 760px; width: 100%;
-  margin-top: -5vh;
+  padding: 10vh 1.5rem 1rem; max-width: 760px; width: 100%;
+  margin-top: 0;
 }
 .hero-mark {
   width: 90px; height: 90px; margin: 0 auto 1.2rem;
