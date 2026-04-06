@@ -8,25 +8,25 @@ const MASTER_KEY= '$2a$10$VM.F.wVc8BUH2VJTnzDOyujTY3zLO5UOYQ8attzqzSdZ5ftrIINz6'
 const BIN_URL   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
  
 const SD_SLIDES = [
-  {label:'Super Deluxe — Photo 1',file:'room2.jpeg'},
-  {label:'Super Deluxe — Photo 2',file:'room4.jpeg'},
-  {label:'Super Deluxe — Photo 3',file:'room3.jpeg'},
-  {label:'Super Deluxe — Photo 4',file:'room6.jpeg'},
-  {label:'Super Deluxe — Photo 5',file:'room8.jpeg'},
+  {label:'Super Deluxe — Photo 1',file:'family1.jpeg'},
+  {label:'Super Deluxe — Photo 2',file:'family2.jpeg'},
+  {label:'Super Deluxe — Photo 3',file:'family3.jpeg'},
+  {label:'Super Deluxe — Photo 4',file:'family4.jpeg'},
+  {label:'Super Deluxe — Photo 5',file:'family5.jpeg'},
 ];
 const TR_SLIDES = [
-  {label:'Triple Room — Photo 1',file:'room4.jpeg'},
-  {label:'Triple Room — Photo 2',file:'room2.jpeg'},
-  {label:'Triple Room — Photo 3',file:'room8.jpeg'},
-  {label:'Triple Room — Photo 4',file:'room3.jpeg'},
-  {label:'Triple Room — Photo 5',file:'room6.jpeg'},
+  {label:'Triple Room — Photo 1',file:'triple1.jpeg'},
+  {label:'Triple Room — Photo 2',file:'family3.jpeg'},
+  {label:'Triple Room — Photo 3',file:'triple3.jpeg'},
+  {label:'Triple Room — Photo 4',file:'triple1.jpeg'},
+  {label:'Triple Room — Photo 5',file:'deluxe3.jpeg'},
 ];
 const PM_SLIDES = [
-  {label:'Family Suite — Photo 1',file:'room9.jpeg'},
-  {label:'Family Suite — Photo 2',file:'room7.jpeg'},
-  {label:'Family Suite — Photo 3',file:'room5.jpeg'},
-  {label:'Family Suite — Photo 4',file:'romm1.jpeg'},
-  {label:'Family Suite — Photo 5',file:'room3.jpeg'},
+  {label:'Family Suite — Photo 1',file:'deluxe1.jpeg'},
+  {label:'Family Suite — Photo 2',file:'deluxe2.jpeg'},
+  {label:'Family Suite — Photo 3',file:'deluxe3.jpeg'},
+  {label:'Family Suite — Photo 4',file:'deluxe4.jpeg'},
+  {label:'Family Suite — Photo 5',file:'deluxe5.jpeg'},
 ];
  
 const PM_ROOM_KEYS = [
