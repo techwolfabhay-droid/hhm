@@ -30,8 +30,7 @@ const PM_SLIDES = [
 ];
  
 const PM_ROOM_KEYS = [
-  '101A','101B','102A','102B','103A','103B','104A','104B','105A','105B','106A','106B',
-  '201A','201B','202A','202B','203A','203B','204A','204B','205A','205B','206A','206B'
+  '101','102','103','104','105','106','201','202','203','204','205','206'
 ];
 const SD_ROOM_KEYS = [301,302,303,305,306,308,309,401,403];
 const TR_ROOM_KEYS = [304,307];
@@ -88,14 +87,14 @@ function heroGoTo(idx) {
 function heroSlide(dir) {
   clearInterval(heroTimer);
   heroGoTo(heroIdx + dir);
-  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
+  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 4500);
 }
 heroDots.forEach((d, i) => d.addEventListener('click', () => {
   clearInterval(heroTimer);
   heroGoTo(i);
-  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
+  heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 4500);
 }));
-heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 5500);
+heroTimer = setInterval(() => heroGoTo(heroIdx + 1), 4500);
  
 (function() {
   const el = document.getElementById('hero');
