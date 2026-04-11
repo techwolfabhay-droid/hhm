@@ -705,7 +705,7 @@ footer { background: var(--dark); padding: 3.5rem 1.5rem 1.8rem; position: relat
   border: 1.5px solid rgba(201,168,76,.25);
   padding: 3px;
 }
-.footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 700; color: #fff; }
+.footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; color: #fff; }
 .footer-sub { font-size: .36rem; letter-spacing: .38em; text-transform: uppercase; color: rgba(255,255,255,.25); display: block; margin-top: .1rem; }
 .footer-brand p { font-size: .72rem; color: rgba(255,255,255,.22); line-height: 1.95; font-weight: 300; }
 .footer-tagline { margin-top: .9rem; font-size: .46rem; letter-spacing: .32em; text-transform: uppercase; color: rgba(139,117,53,.32); }
