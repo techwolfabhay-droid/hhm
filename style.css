@@ -547,7 +547,7 @@ section { padding: 4rem 1.5rem; }
 .rest-item:last-child { border-bottom: none; padding-bottom: 0; }
 .rest-item-special { background: rgba(139,117,53,.06); margin: 0 -1.6rem; padding: .9rem 1.6rem; }
 .rest-icon { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: rgba(139,117,53,.1); border: 1px solid rgba(139,117,53,.25); display: flex; align-items: center; justify-content: center; color: var(--gold-warm); }
-.rest-detail { flex: 1; }
+.rest-detail { flex: 2; }
 .rest-meal { font-family: 'Cormorant Garamond', serif; font-size: .98rem; font-weight: 600; color: #fff; margin-bottom: .1rem; }
 .rest-time { font-size: .52rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-warm); font-weight: 600; margin-bottom: .28rem; }
 .rest-desc { font-size: .65rem; color: rgba(255,255,255,.3); line-height: 1.65; font-weight: 300; }
