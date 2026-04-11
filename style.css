@@ -183,7 +183,7 @@ input, select, textarea { font-family: inherit; outline: none; }
    HERO
 ================================================================ */
 #hero {
-  height: 90vh; min-height: 680px; position: relative;
+  height: 95vh; min-height: 680px; position: relative;
   display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
 .hero-slider { position: absolute; inset: 0; z-index: 0; }
