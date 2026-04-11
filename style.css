@@ -104,11 +104,11 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .nav-logo-text { display: flex; flex-direction: column; }
 .nav-name {
-  font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 700;
   color: var(--dark-text); line-height: 1.1; letter-spacing: .018em; transition: color .4s;
 }
 .nav-sub {
-  font-size: .36rem; letter-spacing: .42em; text-transform: uppercase;
+  font-size: .50rem; letter-spacing: .42em; text-transform: uppercase;
   color: var(--muted); margin-top: .1rem; transition: color .4s;
 }
 #nav.sc .nav-name { color: var(--dark-text); }
