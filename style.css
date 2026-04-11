@@ -235,7 +235,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   border-radius: 50%;
   border: 2px solid rgba(201,168,76,.35);
   padding: 6px;
-  transform: translateY(-20px);
+  transform: translateY(-19px);
 }
 .hero-orn {
   display: flex; align-items: center; gap: .7rem; justify-content: center;
