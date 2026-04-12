@@ -656,7 +656,7 @@ function buildMenuBook(){
       <div style="width:36px;height:1px;background:#C9956A;margin:1.2rem auto;"></div>
       <p style="font-size:.62rem;color:rgba(139,94,60,.45);line-height:1.8;">All prices exclusive of taxes.<br>Please inform us of any allergies.<br>Kitchen closed 10:30 PM – 7:00 AM.<br>Min. waiting time 20 mins.</p>
       <div style="margin-top:1rem;display:flex;gap:1rem;justify-content:center;font-size:.58rem;color:rgba(139,94,60,.4);">
-        <span>🟢 Veg</span><span>🔴 Non-Veg</span>
+        <span>🟢 Veg</span></span>
       </div>
       <p style="font-size:.52rem;color:rgba(139,94,60,.3);margin-top:.8rem;line-height:1.6;">Breakfast: 8AM–10AM · Lunch: 1PM–4PM<br>Dinner: 7PM–10:30PM</p>
       <div class="page-num" style="position:static;margin-top:auto;padding-top:2rem;">i</div>
