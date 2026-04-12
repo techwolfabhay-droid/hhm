@@ -108,7 +108,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   color: var(--dark-text); line-height: 1.1; letter-spacing: .018em; transition: color .4s;
 }
 .nav-sub {
-  font-size: .45rem; letter-spacing: .42em; text-transform: uppercase; font-weight: 300;
+  font-size: .45rem; letter-spacing: .42em; text-transform: uppercase; font-weight: 400;
   color: var(--muted); margin-top: .1rem; transition: color .4s;
 }
 #nav.sc .nav-name { color: var(--dark-text); }
@@ -244,7 +244,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .h-line { width: 36px; height: 1px; background: rgba(201,168,76,.45); }
 .h-diamond { width: 5px; height: 5px; background: var(--gold-warm); transform: rotate(45deg); }
 .hero-eyebrow {
-  font-size: .48rem; letter-spacing: .5em; text-transform: uppercase; font-weight:200;
+  font-size: .52rem; letter-spacing: .5em; text-transform: uppercase; font-weight:400;
   color: var(--white); margin-bottom: 1.2rem; opacity: .88;
   animation: fadeUp .8s .22s ease both;
 }
