@@ -708,15 +708,15 @@ footer { background: var(--dark); padding: 3.5rem 1.5rem 1.8rem; position: relat
 .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 800; color: #fff; }
 .footer-sub { font-size: .36rem; letter-spacing: .38em; text-transform: uppercase; color: rgba(255,255,255,.25); display: block; margin-top: .1rem; }
 .footer-brand p { font-size: .85rem; color: rgba(255,255,255,.22); line-height: 1.95; font-weight: 400; }
-.footer-tagline { margin-top: .9rem; font-size: .46rem; letter-spacing: .32em; text-transform: uppercase; color: rgba(139,117,53,.32); }
+.footer-tagline { margin-top: .9rem; font-size: .52rem; letter-spacing: .32em; text-transform: uppercase; color: rgba(139,117,53,.32); }
 .footer-col h4 { font-size: .52rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-warm); margin-bottom: 1rem; }
 .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
-.footer-col a { font-size: .88rem; color: rgba(255,255,255,.26); transition: color .3s; }
+.footer-col a { font-size: .98rem; color: rgba(255,255,255,.26); transition: color .3s; }
 .footer-col a:hover { color: var(--gold-warm); }
 .footer-bottom { max-width: 1120px; margin: 0 auto; padding-top: 1.2rem; border-top: 1px solid rgba(139,117,53,.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .9rem; }
 .footer-copy { font-size: .55rem; color: rgba(255,255,255,.14); letter-spacing: .1em; }
 .footer-social { display: flex; gap: .65rem; align-items: center; }
-.footer-social span { font-size: .52rem; color: rgba(255,255,255,.16); letter-spacing: .14em; text-transform: uppercase; }
+.footer-social span { font-size: .54rem; color: rgba(255,255,255,.16); letter-spacing: .14em; text-transform: uppercase; }
 .s-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform .3s, box-shadow .3s; }
 .s-btn:hover { transform: scale(1.14); box-shadow: 0 5px 18px rgba(0,0,0,.3); }
 .s-ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
