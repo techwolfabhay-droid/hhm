@@ -15,7 +15,8 @@ const SD_SLIDES = [
 const TR_SLIDES = [
   {label:'Triple Room — Photo 1',file:'triple1.jpeg'},
   {label:'Triple Room — Photo 2',file:'family3.jpeg'},
-  {label:'Triple Room — Photo 4',file:'triple1.jpeg'},
+  {label:'Triple Room — Photo 3',file:'triple1.jpeg'},
+   {label:'Triple Room — Photo 4',file:'room1.png'},
 ];
 const PM_SLIDES = [
   {label:'Family Suite — Photo 1',file:'deluxe1.jpeg'},
