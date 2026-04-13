@@ -706,7 +706,7 @@ footer { background: var(--dark); padding: 3.5rem 1.5rem 1.8rem; position: relat
   padding: 3px;
 }
 .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 800; color: #fff; }
-.footer-sub { font-size: .50rem; letter-spacing: .38em; text-transform: uppercase; color: rgba(255,255,255,.25); display: block; margin-top: .1rem; }
+.footer-sub { font-size: .55rem; letter-spacing: .38em; text-transform: uppercase; color: rgba(255,255,255,.25); display: block; margin-top: .1rem; }
 .footer-brand p { font-size: .85rem; color: rgba(255,255,255,.22); line-height: 1.95; font-weight: 400; }
 .footer-tagline { margin-top: .9rem; font-size: .60rem; letter-spacing: .32em; text-transform: uppercase; color: rgba(139,117,53,.32); }
 .footer-col h4 { font-size: .52rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-warm); margin-bottom: 1rem; }
