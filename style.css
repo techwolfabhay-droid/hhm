@@ -244,7 +244,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .h-line { width: 36px; height: 1px; background: rgba(201,168,76,.45); }
 .h-diamond { width: 5px; height: 5px; background: var(--gold-warm); transform: rotate(45deg); }
 .hero-eyebrow {
-  font-size: .52rem; letter-spacing: .5em; text-transform: uppercase; font-weight:400;
+  font-size: .60rem; letter-spacing: .5em; text-transform: uppercase; font-weight:400;
   color: var(--white); margin-bottom: 1.2rem; opacity: .88;
   animation: fadeUp .8s .22s ease both;
 }
@@ -413,7 +413,7 @@ section { padding: 4rem 1.5rem; }
 }
 .about-body { font-size: .85rem; line-height: 2; color: var(--dark-muted); font-weight: 300; margin-bottom: 1.5rem; }
 .about-feats { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1.5rem; }
-.about-feat { display: flex; align-items: center; gap: .55rem; font-size: .7rem; color: var(--dark-text); font-weight: 500; }
+.about-feat { display: flex; align-items: center; gap: .55rem; font-size: .9rem; color: var(--dark-text); font-weight: 500; }
 .feat-icon { width: 22px; height: 22px; border-radius: 50%; background: rgba(139,117,53,.1); display: flex; align-items: center; justify-content: center; color: var(--gold); flex-shrink: 0; }
 
 /* ================================================================
@@ -453,7 +453,7 @@ section { padding: 4rem 1.5rem; }
 .badge-premium { background: var(--gold); color: #fff; }
 .room-body { padding: 1.4rem; }
 .room-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; margin-bottom: .4rem; color: #fff; }
-.room-desc { font-size: .73rem; color: rgba(255,255,255,.35); line-height: 1.8; font-weight: 300; margin-bottom: .9rem; }
+.room-desc { font-size: .88rem; color: rgba(255,255,255,.35); line-height: 1.8; font-weight: 300; margin-bottom: .9rem; }
 .room-feats { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.1rem; }
 .room-feats span { font-size: .46rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; padding: .25rem .65rem; border: 1px solid rgba(139,117,53,.2); color: rgba(176,154,80,.7); border-radius: 2px; }
 .room-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
@@ -548,7 +548,7 @@ section { padding: 4rem 1.5rem; }
 .rest-item:last-child { border-bottom: none; padding-bottom: 0; }
 .rest-item-special { background: rgba(139,117,53,.06); margin: 0 -1.6rem; padding: .9rem 1.6rem; }
 .rest-icon { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: rgba(139,117,53,.1); border: 1px solid rgba(139,117,53,.25); display: flex; align-items: center; justify-content: center; color: var(--gold-warm); }
-.rest-detail { flex: 2; }
+.rest-detail { flex: 4; }
 .rest-meal { font-family: 'Cormorant Garamond', serif; font-size: .98rem; font-weight: 600; color: #fff; margin-bottom: .1rem; }
 .rest-time { font-size: .52rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-warm); font-weight: 600; margin-bottom: .28rem; }
 .rest-desc { font-size: .65rem; color: rgba(255,255,255,.3); line-height: 1.65; font-weight: 300; }
