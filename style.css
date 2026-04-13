@@ -60,12 +60,12 @@ input, select, textarea { font-family: inherit; outline: none; }
   animation: ldPulse 2s ease-in-out infinite;
 }
 .ld-name {
-  font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.8rem;
   color: var(--gold-warm); font-weight: 600; letter-spacing: .06em;
   margin-bottom: .4rem; animation: ldPulse 2s ease-in-out infinite;
 }
 .ld-tagline {
-  font-size: .60rem; letter-spacing: .5em; text-transform: uppercase;
+  font-size: .55rem; letter-spacing: .5em; text-transform: uppercase;
   color: rgba(255,255,255); margin-bottom: 2.5rem;
 }
 .ld-bar-wrap { width: 160px; height: 1px; background: rgba(139,117,53,.12); margin: 0 auto; overflow: hidden; }
