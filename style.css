@@ -108,7 +108,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   color: var(--dark-text); line-height: 1.1; letter-spacing: .018em; transition: color .4s;
 }
 .nav-sub {
-  font-size: .45rem; letter-spacing: .42em; text-transform: uppercase; font-weight: 400;
+  font-size: .45rem; letter-spacing: .42em; text-transform: uppercase; font-weight: 600;
   color: var(--muted); margin-top: .1rem; transition: color .4s;
 }
 #nav.sc .nav-name { color: var(--dark-text); }
