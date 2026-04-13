@@ -65,7 +65,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   margin-bottom: .4rem; animation: ldPulse 2s ease-in-out infinite;
 }
 .ld-tagline {
-  font-size: .48rem; letter-spacing: .5em; text-transform: uppercase;
+  font-size: .60rem; letter-spacing: .5em; text-transform: uppercase;
   color: rgba(201,168,76,.35); margin-bottom: 2.5rem;
 }
 .ld-bar-wrap { width: 160px; height: 1px; background: rgba(139,117,53,.12); margin: 0 auto; overflow: hidden; }
@@ -244,7 +244,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .h-line { width: 36px; height: 1px; background: rgba(201,168,76,.45); }
 .h-diamond { width: 5px; height: 5px; background: var(--gold-warm); transform: rotate(45deg); }
 .hero-eyebrow {
-  font-size: .60rem; letter-spacing: .5em; text-transform: uppercase; font-weight:400;
+  font-size: .75rem; letter-spacing: .5em; text-transform: uppercase; font-weight:600;
   color: var(--white); margin-bottom: 1.2rem; opacity: .88;
   animation: fadeUp .8s .22s ease both;
 }
