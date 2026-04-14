@@ -56,7 +56,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   margin: 0 auto 1.2rem; border-radius: 50%;
   border: 2px solid rgba(201,168,76,.25);
   padding: 8px;
-  background: center center;
+  background: #fff;
   animation: ldPulse 2s ease-in-out infinite;
 }
 .ld-name {
