@@ -52,7 +52,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 #loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
 .ld-inner { text-align: center; }
 .ld-logo {
-  width: 100px; height: 100px; object-fit: cover;
+  width: 102px; height: 101px; object-fit: cover;
   margin: 0 auto 1.2rem; border-radius: 50%;
   border: 2px solid rgba(201,168,76,.25);
   padding: 8px;
