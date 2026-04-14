@@ -35,9 +35,9 @@ const SD_ROOM_KEYS = [301,302,303,305,306,308,309,401,403];
 const TR_ROOM_KEYS = [304,307];
  
 let D = {
-  sdPrice: 2500,
-  trPrice: 3500,
-  pmPrice: 4500,
+  sdPrice: 3500,
+  trPrice: 4500,
+  pmPrice: 5500,
   sd: Object.fromEntries(SD_ROOM_KEYS.map(k=>[k,true])),
   tr: Object.fromEntries(TR_ROOM_KEYS.map(k=>[k,true])),
   pm: Object.fromEntries(PM_ROOM_KEYS.map(k=>[k,true]))
