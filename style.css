@@ -465,7 +465,7 @@ section { padding: 4rem 1.5rem; }
 .badge-premium { background: var(--gold); color: #fff; }
 .room-body { padding: 1.4rem; }
 .room-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; margin-bottom: .4rem; color: #fff; }
-.room-desc { font-size: .99rem; color: rgba(255,255,255,.35); line-height: 1.8; font-weight: 300; margin-bottom: .9rem; }
+.room-desc { font-size: 1.1.rem; color: rgba(255,255,255,.35); line-height: 1.8; font-weight: 300; margin-bottom: .9rem; }
 .room-feats { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.1rem; }
 .room-feats span { font-size: .46rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; padding: .25rem .65rem; border: 1px solid rgba(139,117,53,.2); color: rgba(176,154,80,.7); border-radius: 2px; }
 .room-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
